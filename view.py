@@ -22,19 +22,10 @@ class Game:
 
     def run(self):
         while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                if event.type == pygame.KEYDOWN:
-                    self.gameStateManager.set_states("Level")
-
             self.states[self.gameStateManager.get_states()].run()
 
             pygame.display.update()
             self.clock.tick(FPS)
-
 
 
 # start menu screen
@@ -54,8 +45,9 @@ class Menu:
     # Event handler
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-
+                pygame.quit()
+                sys.exit()
+            
             if event.type == pygame.KEYDOWN:
                 self.gameState.set_states("Level")
 
@@ -74,10 +66,11 @@ class Level:
     # Event handler
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                sys.exit()
 
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_ESCAPE]:
+            key_press = pygame.key.get_pressed()
+            if key_press[pygame.K_ESCAPE]:
                 self.gameState.set_states("Pause")
 
 
@@ -95,7 +88,8 @@ class Pause_menu:
     # Event handler
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                sys.exit()
 
             key_press = pygame.key.get_pressed()
             if key_press[pygame.K_ESCAPE]:
@@ -115,6 +109,3 @@ class GameStateManager:
 if __name__ == "__main__":
     game = Game()
     game.run()
-
-
-

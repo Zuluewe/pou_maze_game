@@ -1,2 +1,12 @@
 requests
 pygame
+
+# ting vi gerne vil bruge:
+# - pygame
+# scene based structure
+
+# model is the data of the game such as the maze, point,
+
+# view is the visual "window", 
+
+# controller is the player, collision
