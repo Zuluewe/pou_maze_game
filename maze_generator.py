@@ -116,6 +116,7 @@ class Maze:
 maze = Maze()
 maze.draw_grid()
 maze.generate(0,0)
+
 running = True
 while running:
     # process input (events)
