@@ -1,3 +1,5 @@
+#
+
 import pygame
 import sys
 
@@ -5,12 +7,18 @@ SCREENWIDTH = 1280
 SCREENHEIGHT = 720
 FPS = 60
 
+"""def draw_text(text, font, text_col, x, y): 
+        img = font.render(text, True, text_col)
+        screen.blit(img, (x,y))"""
+
 class Game:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
         pygame.display.set_caption("Pou Maze Game")
         self.clock = pygame.time.Clock()
+
+        # font
         self.font = pygame.font.Font("assets/PouFont.ttf", 32)
 
         self.gameStateManager = GameStateManager("Menu")

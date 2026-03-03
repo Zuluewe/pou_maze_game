@@ -1,6 +1,8 @@
+# model
+
 import pygame
 
-import view as View
+
 
 player_position = pygame.Vector2(View.SCREENWIDTH() / 2, View.SCREENHEIGHT() / 2) # position in middle
 player_sprite = pygame.image.load("assets/images/pou_hungry.png")

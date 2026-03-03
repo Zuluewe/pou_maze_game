@@ -1,3 +1,5 @@
+# This is an experiment to try and get the base functions down and have a feel for how pygame works
+
 import pygame
 
 SCREENWIDTH = 1280

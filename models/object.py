@@ -1,3 +1,5 @@
+# model
+
 from abc import ABC, abstractmethod
 import pygame
 
