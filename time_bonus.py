@@ -1,12 +1,12 @@
 from object import GameObject
 
-class Food(GameObject):
-    def __init__(self, position, sprite, score, sound):
+class TimeBonus(GameObject):
+    def __init__(self, position, sprite, timer, sound):
         super().__init__(position, sprite)
-        self.score = score
+        self.timer = timer
         self.sound = sound
 
     def on_collision(self):
-        self.score += 1 # add one point
+        self.timer += 5 # add 5 second to time
         self.sound.play()
         return super().on_collision()
