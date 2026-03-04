@@ -1,5 +1,6 @@
 import pygame
 import random
+
 WIDTH = 800
 HEIGHT = 600
 CELL_SIZE = 20
@@ -124,7 +125,7 @@ while running:
         # check for closing the window
         if event.type == pygame.QUIT:
             running = False
-    pygame.display.set_caption(f"Pow's Dungeon Escape - Maze Generated! (Cells visited: {len(maze.visited)})")
+    pygame.display.set_caption(f"Pou's Dungeon Escape - Maze Generated! (Cells visited: {len(maze.visited)})")
     clock.tick(60)
 pygame.quit()
 

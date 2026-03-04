@@ -24,6 +24,7 @@ class Game:
         self.start = Start(self.screen, self.gameStateManager, self.font)
         self.level = Level(self.screen, self.gameStateManager, self.font)
         self.pause = Pause(self.screen, self.gameStateManager, self.font)
+        self.pause = End(self.screen, self.gameStateManager, self.font)
 
         self.states = {"Menu": self.start, "Level": self.level, "Pause": self.pause}
 

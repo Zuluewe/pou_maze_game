@@ -1,6 +1,6 @@
 # view
 
-class Level:
+class GameOver:
     def __init__(self, display, font, gameStateManager, player_sprite):
         self.display = display
         self.font = font
@@ -12,10 +12,12 @@ class Level:
         self.display.blit(self.player_sprite, model.player_position)
 
         # define text
-        score_text = self.font.render(f"Score: {model.score}", True, "white")
+        game_over_text = self.font.render("Game Over", True, "white")
+        restart_game_text = font.render("Press 'r' to restart game", True, "white")
 
         # render text
-        self.display.blit(score_text, (10, 10))
+        self.display.blit(game_over_text, (10, 10))
+        self.display.blit(restart_game_text, (10, 20))
 
 """class Level:
     def __init__(self, display, gameStateManager, font):
