@@ -1,10 +1,15 @@
 # controller 
+# takes input from player, manages colission and level progression
 
 import pygame
+
+# import views
 import views.start as Start
 import views.level as Level
 import views.pause as Pause
 import views.game_over as End
+
+
 
 SCREENWIDTH = 1280
 SCREENHEIGHT = 720
