@@ -1,13 +1,13 @@
 import pygame
 import random
 
-WIDTH = 800
-HEIGHT = 600
+
 CELL_SIZE = 20
 GRID_SIZE = 20
 OFFSET_X = 50
 OFFSET_Y = 50
 MAZE_WIDTH = GRID_SIZE * CELL_SIZE
+
 
 # colors
 WHITE = (255, 255, 255)
@@ -17,12 +17,12 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
 pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((600, 800 ))
 pygame.display.set_caption("Maze Generator")
 clock = pygame.time.Clock()
 
 
-class Maze:
+class Maze():
     def __init__(self):
         self.grid_size = GRID_SIZE
         self.cell_size = CELL_SIZE
@@ -111,12 +111,11 @@ class Maze:
         pygame.display.flip()
         clock.tick(60)
 
-
-        
-
 maze = Maze()
 maze.draw_grid()
 maze.generate(0,0)
+
+        
 
 running = True
 while running:
@@ -125,7 +124,6 @@ while running:
         # check for closing the window
         if event.type == pygame.QUIT:
             running = False
-    pygame.display.set_caption(f"Pou's Dungeon Escape - Maze Generated! (Cells visited: {len(maze.visited)})")
     clock.tick(60)
 pygame.quit()
 

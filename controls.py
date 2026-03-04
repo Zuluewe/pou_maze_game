@@ -4,10 +4,9 @@
 import pygame
 
 # import views
-import views.start as Start
-import views.level as Level
-import views.pause as Pause
-import views.game_over as End
+import start as Start
+import pause as Pause
+import game_over as End
 
 
 
@@ -27,7 +26,7 @@ class Game:
 
         self.gameStateManager = GameStateManager("Menu")
         self.start = Start(self.screen, self.gameStateManager, self.font)
-        self.level = Level(self.screen, self.gameStateManager, self.font)
+        self.level = (self.screen, self.gameStateManager, self.font)
         self.pause = Pause(self.screen, self.gameStateManager, self.font)
         self.pause = End(self.screen, self.gameStateManager, self.font)
 

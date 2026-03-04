@@ -1,4 +1,7 @@
 # view
+SCREENWIDTH = 1280
+SCREENHEIGHT = 720
+FPS = 60
 
 class GameOver:
     def __init__(self, display, font, gameStateManager, player_sprite):
@@ -13,7 +16,7 @@ class GameOver:
 
         # define text
         game_over_text = self.font.render("Game Over", True, "white")
-        restart_game_text = font.render("Press 'r' to restart game", True, "white")
+        restart_game_text = self.font.render("Press 'r' to restart game", True, "white")
 
         # render text
         self.display.blit(game_over_text, (10, 10))

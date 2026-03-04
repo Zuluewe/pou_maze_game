@@ -1,6 +1,8 @@
 # view
 
-import controller as CON
+SCREENWIDTH = 1280
+SCREENHEIGHT = 720
+FPS = 60
 
 class Pause:
     def __init__(self, display, font, gameStateManager):
@@ -17,8 +19,8 @@ class Pause:
         return_text = self.font.render("Press any key to continue", True, "white")
 
         # render text
-        self.display.blit(pause_text, (CON.SCREENWIDTH // 2, CON.SCREENHEIGHT // 2))
-        self.display.blit(return_text, (CON.SCREENWIDTH // 2, CON.SCREENHEIGHT // 2 - 100))
+        self.display.blit(pause_text, (SCREENWIDTH // 2, SCREENHEIGHT // 2))
+        self.display.blit(return_text, (SCREENWIDTH // 2, SCREENHEIGHT // 2 - 100))
 
 """class Pause_menu:
     def __init__(self, display, gameStateManager, font):

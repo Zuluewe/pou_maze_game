@@ -1,18 +1,19 @@
 # view
 
 import pygame
-import controller as CON
-
-import models.maze_generator as MAZE
+from maze_generator import Maze
+SCREENWIDTH = 1060
+SCREENHEIGHT = 720
+FPS = 60
 
 pygame.init()
-screen = pygame.display.set_mode((CON.SCREENWIDTH, CON.SCREENHEIGHTHEIGHT))
+screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
 pygame.display.set_caption("Level")
 clock = pygame.time.Clock()
 
 class Level:
-    def __init__(self, display, font, gameStateManager, player_sprite):
-        self.display = display
+    def __init__(self, screen, font, gameStateManager, player_sprite):
+        self.display = screen
         self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
@@ -28,9 +29,10 @@ class Level:
         self.display.blit(score_text, (10, 10))
 
         #render maze
-        MAZE.maze = MAZE.Maze()
-        MAZE.maze.draw_grid()
-        MAZE.maze.generate(0,0)
+        maze = Maze()
+        maze.screen = self.display
+        maze.draw_grid()
+        maze.generate(0,0)
 
 running = True
 while running:
@@ -39,7 +41,6 @@ while running:
         # check for closing the window
         if event.type == pygame.QUIT:
             running = False
-    pygame.display.set_caption(f"Levels visited: {len(MAZE.maze.visited)})")
     clock.tick(60)
 pygame.quit()
 
