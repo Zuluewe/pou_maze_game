@@ -16,23 +16,35 @@ YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-pygame.init()
-screen = pygame.display.set_mode((600, 800 ))
-pygame.display.set_caption("Maze Generator")
-clock = pygame.time.Clock()
+# Note: screen and clocks are provided by the caller (e.g. a view) so
+# the maze generator can render into whatever surface is appropriate.
 
 
 class Maze():
-    def __init__(self):
-        self.grid_size = GRID_SIZE
-        self.cell_size = CELL_SIZE
-        self.offset_x = OFFSET_X
-        self.offset_y = OFFSET_Y
+    def __init__(self, screen, grid_size=GRID_SIZE, cell_size=CELL_SIZE, offset_x=OFFSET_X, offset_y=OFFSET_Y):
+        """A simple maze generator.
 
+        Parameters
+        ----------
+        screen : pygame.Surface
+            Surface to draw the maze on. Provided by the caller (e.g. a view).
+        grid_size : int
+            Number of cells in each dimension.
+        cell_size : int
+            Pixel size of each cell.
+        offset_x, offset_y : int
+            Pixel offsets for the maze origin.
+        """
+        self.screen = screen
+        self.grid_size = grid_size
+        self.cell_size = cell_size
+        self.offset_x = offset_x
+        self.offset_y = offset_y
         self.visited = set()
         self.stack = []
         self.solution = {}
 
+        # initial drawing
         self.draw_grid()
 
     def locate_cell_corners(self, row, col):
@@ -44,26 +56,28 @@ class Maze():
         for row in range(self.grid_size):
             for col in range(self.grid_size):
                 x, y = self.locate_cell_corners(row, col)
-                pygame.draw.rect(screen, WHITE, (x - 1, y - 1, self.cell_size + 1, self.cell_size + 1), 1) 
+                pygame.draw.rect(self.screen, WHITE, (x - 1, y - 1, self.cell_size + 1, self.cell_size + 1), 1) 
                 # x,y is where it starts, then we draw a line of length cell_size in both directions to create the cell
 
     def draw_cell(self, row, col, color):
         x, y = self.locate_cell_corners(row, col)
-        pygame.draw.rect(screen, color, (x + 2, y + 2, self.cell_size - 3, self.cell_size - 3)) # we draw a rectangle that is slightly smaller than the cell to create a border effect
+        pygame.draw.rect(self.screen, color, (x + 2, y + 2, self.cell_size - 3, self.cell_size - 3)) # we draw a rectangle that is slightly smaller than the cell to create a border effect
         
     def remove_wall(self, row, col, direction):
         x,y = self.locate_cell_corners(row, col)
         
         if direction == 'right':
-            pygame.draw.line(screen, BLACK, (x + self.cell_size, y), (x + self.cell_size, y + self.cell_size), 3) # We draw over the line to make like it is erased
+            pygame.draw.line(self.screen, BLACK, (x + self.cell_size, y), (x + self.cell_size, y + self.cell_size), 3) # We draw over the line to make like it is erased
         elif direction == 'left':
-            pygame.draw.line(screen, BLACK, (x, y), (x, y + self.cell_size), 3)
+            pygame.draw.line(self.screen, BLACK, (x, y), (x, y + self.cell_size), 3)
         elif direction == 'down':
-            pygame.draw.line(screen, BLACK, (x, y + self.cell_size), (x + self.cell_size, y + self.cell_size), 3)
+            pygame.draw.line(self.screen, BLACK, (x, y + self.cell_size), (x + self.cell_size, y + self.cell_size), 3)
         elif direction == 'up':
-            pygame.draw.line(screen, BLACK, (x, y), (x + self.cell_size, y), 3)
+            pygame.draw.line(self.screen, BLACK, (x, y), (x + self.cell_size, y), 3)
     
     def generate(self, start_row= 0, start_col =0):
+        # local clock so we don't rely on a global
+        clock = pygame.time.Clock()
         self.stack.append((start_row, start_col))
         self.visited.add((start_row, start_col))
 
@@ -101,31 +115,36 @@ class Maze():
     
     def open_entrance_and_exit(self):
 
-        pygame.draw.line(screen, BLACK, (OFFSET_X, OFFSET_Y), (OFFSET_X + CELL_SIZE, OFFSET_Y), 5)
+        pygame.draw.line(self.screen, BLACK, (OFFSET_X, OFFSET_Y), (OFFSET_X + CELL_SIZE, OFFSET_Y), 5)
         exit_x = OFFSET_X + (GRID_SIZE - 1) * CELL_SIZE
         exit_y = OFFSET_Y + (GRID_SIZE) * CELL_SIZE
-        pygame.draw.line(screen, BLACK, (exit_x, exit_y), (exit_x + CELL_SIZE, exit_y), 5)
+        pygame.draw.line(self.screen, BLACK, (exit_x, exit_y), (exit_x + CELL_SIZE, exit_y), 5)
         self.draw_cell(0, 0, YELLOW) # row 0, col 0
         self.draw_cell(GRID_SIZE-1, GRID_SIZE - 1, GREEN)
         
         pygame.display.flip()
+        clock = pygame.time.Clock()
         clock.tick(60)
 
-maze = Maze()
-maze.draw_grid()
-maze.generate(0,0)
 
-        
 
-running = True
-while running:
-    # process input (events)
-    for event in pygame.event.get():
-        # check for closing the window
-        if event.type == pygame.QUIT:
-            running = False
-    clock.tick(60)
-pygame.quit()
+# when executed as a standalone script for testing
+if __name__ == "__main__":
+    pygame.init()
+    screen = pygame.display.set_mode((600, 400))
+    pygame.display.set_caption("Maze Generator")
+    clock = pygame.time.Clock()
+
+    maze = Maze(screen)
+    maze.generate(0, 0)
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        clock.tick(60)
+    pygame.quit()
 
 
     

@@ -2,14 +2,15 @@
 
 import pygame
 from maze_generator import Maze
-SCREENWIDTH = 1060
-SCREENHEIGHT = 720
-FPS = 60
 
 pygame.init()
+SCREENWIDTH = 1060
+SCREENHEIGHT = 700
+FPS = 60
 screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
-pygame.display.set_caption("Level")
+pygame.display.set_caption("Pou Maze Game")
 clock = pygame.time.Clock()
+
 
 class Level:
     def __init__(self, screen, font, gameStateManager, player_sprite):
@@ -17,6 +18,8 @@ class Level:
         self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
+        # create a maze instance once and reuse it
+        self.maze = Maze(self.display)
 
     def draw(self, model):
         self.display.fill("#50b032") # pou grass green
@@ -28,21 +31,22 @@ class Level:
         # render text
         self.display.blit(score_text, (10, 10))
 
+        
+
+if __name__ == "__main__":
+
+    running = True
+    while running:
         #render maze
-        maze = Maze()
-        maze.screen = self.display
+        maze = Maze(screen)
         maze.draw_grid()
         maze.generate(0,0)
-
-running = True
-while running:
-    # process input (events)
-    for event in pygame.event.get():
-        # check for closing the window
-        if event.type == pygame.QUIT:
-            running = False
-    clock.tick(60)
-pygame.quit()
+        for event in pygame.event.get():
+            # check for closing the window
+            if event.type == pygame.QUIT:
+                running = False
+        clock.tick(60)
+    pygame.quit()
 
 
 """class Level:
