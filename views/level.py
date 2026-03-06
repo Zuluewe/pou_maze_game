@@ -1,13 +1,12 @@
 # view
 
 import pygame
+
+import variable
 from maze_generator import Maze
 
 pygame.init()
-SCREENWIDTH = 1060
-SCREENHEIGHT = 700
-FPS = 60
-screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
+screen = pygame.display.set_mode((variable.SCREENWIDTH, variable.SCREENHEIGHT))
 pygame.display.set_caption("Pou Maze Game")
 clock = pygame.time.Clock()
 
@@ -18,6 +17,7 @@ class Level:
         self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
+        
         # create a maze instance once and reuse it
         self.maze = Maze(self.display)
 

@@ -1,7 +1,6 @@
 # view
-SCREENWIDTH = 1280
-SCREENHEIGHT = 720
-FPS = 60
+
+import variable
 
 class GameOver:
     def __init__(self, display, font, gameStateManager, player_sprite):

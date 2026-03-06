@@ -1,8 +1,6 @@
 # view
 
-SCREENWIDTH = 1280
-SCREENHEIGHT = 720
-FPS = 60
+import variable
 
 class Start:
     def __init__(self, display, font, gameStateManager):
@@ -19,8 +17,8 @@ class Start:
         start_text = self.font.render("Press any key to start", True, "white")
 
         # render text
-        self.display.blit(welcome_text, (SCREENWIDTH // 2, SCREENHEIGHT // 2))
-        self.display.blit(start_text, (SCREENWIDTH // 2, SCREENHEIGHT // 2 - 100))
+        self.display.blit(welcome_text, (variable.SCREENWIDTH // 2, variable.SCREENHEIGHT // 2))
+        self.display.blit(start_text, (variable.SCREENWIDTH // 2, variable.SCREENHEIGHT // 2 - 100))
 
 """class Menu:
     def __init__(self, display, gameStateManager, font):

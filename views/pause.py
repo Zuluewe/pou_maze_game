@@ -1,8 +1,6 @@
 # view
 
-SCREENWIDTH = 1280
-SCREENHEIGHT = 720
-FPS = 60
+import variable
 
 class Pause:
     def __init__(self, display, font, gameStateManager):
@@ -19,8 +17,8 @@ class Pause:
         return_text = self.font.render("Press any key to continue", True, "white")
 
         # render text
-        self.display.blit(pause_text, (SCREENWIDTH // 2, SCREENHEIGHT // 2))
-        self.display.blit(return_text, (SCREENWIDTH // 2, SCREENHEIGHT // 2 - 100))
+        self.display.blit(pause_text, (variable.SCREENWIDTH // 2, variable.SCREENHEIGHT // 2))
+        self.display.blit(return_text, (variable.SCREENWIDTH // 2, variable.SCREENHEIGHT // 2 - 100))
 
 """class Pause_menu:
     def __init__(self, display, gameStateManager, font):
