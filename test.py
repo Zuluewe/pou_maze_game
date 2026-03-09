@@ -50,9 +50,9 @@ restart_game_text = font.render("Press 'r' to restart game", True, "white")
 # load sound
 background_music = pygame.mixer.music.load("assets/sounds/background_music.ogg")
 pygame.mixer.music.play(-1, 0.0) # -1 means the music loops forever and the next varible is where the song starts
-pygame.mixer.music.set_volume(0.1)  
+pygame.mixer.music.set_volume(0.1)
 
-pou_eating = pygame.mixer.Sound("assets/sounds/pou_eating.mp3")
+pou_eating = pygame.mixer.Sound("assets/sounds/eat.ogg")
 game_over = pygame.mixer.Sound("assets/sounds/game_over.mp3")
 
 

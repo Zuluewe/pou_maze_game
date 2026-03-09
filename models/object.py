@@ -6,10 +6,10 @@ import pygame
 class GameObject(ABC):
     def __init__(self, position, sprite = None):
         self.position = position
+        self.sprite = sprite
         self.rect = self.sprite.get_rect(topleft=position)
         self.active = True
     
-    @property
     def draw(self, screen):
         if self.active:
             screen.blit(self.sprite, self.rect)

@@ -3,10 +3,11 @@
 import variable
 
 class Pause:
-    def __init__(self, display, font, gameStateManager):
+    def __init__(self, display, font, gameStateManager, player_sprite):
         self.display = display
         self.font = font
         self.gameState = gameStateManager
+        self.player_sprite = player_sprite
 
     def draw(self, model):
         self.display.fill("#954d25") # pou dirt

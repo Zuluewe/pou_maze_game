@@ -3,12 +3,8 @@
 import pygame
 
 import variable
+import models.player as player
 from maze_generator import Maze
-
-pygame.init()
-screen = pygame.display.set_mode((variable.SCREENWIDTH, variable.SCREENHEIGHT))
-pygame.display.set_caption("Pou Maze Game")
-clock = pygame.time.Clock()
 
 
 class Level:
@@ -23,7 +19,7 @@ class Level:
 
     def draw(self, model):
         self.display.fill("#50b032") # pou grass green
-        self.display.blit(self.player_sprite, model.player_position)
+        self.display.blit(player.sprite, player.position)
 
         # define text
         score_text = self.font.render(f"Score: {model.score}", True, "white")
@@ -34,15 +30,17 @@ class Level:
         
 
 if __name__ == "__main__":
+    pygame.init()
+    screen = pygame.display.set_mode((variable.SCREENWIDTH, variable.SCREENHEIGHT))
+    pygame.display.set_caption("Pou Maze Game")
+    clock = pygame.time.Clock()
 
     running = True
     while running:
-        #render maze
         maze = Maze(screen)
         maze.draw_grid()
-        maze.generate(0,0)
+        maze.generate(0, 0)
         for event in pygame.event.get():
-            # check for closing the window
             if event.type == pygame.QUIT:
                 running = False
         clock.tick(60)
