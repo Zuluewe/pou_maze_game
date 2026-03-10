@@ -4,8 +4,9 @@ import pygame
 import screenvariable
 
 class Start:
-    def __init__(self, display, gameStateManager, player_sprite = None):
+    def __init__(self, display, font, gameStateManager, player_sprite = None):
         self.display = display
+        self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
 
