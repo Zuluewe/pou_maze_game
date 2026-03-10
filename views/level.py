@@ -1,7 +1,6 @@
 # view
 
 import pygame
-<<<<<<< HEAD
 from maze_generator import Maze
 SCREENWIDTH = 1060
 SCREENHEIGHT = 720
@@ -15,25 +14,18 @@ MAZE_WIDTH = GRID_SIZE * CELL_SIZE
 
 
 pygame.init()
+screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
 pygame.display.set_caption("Level")
 clock = pygame.time.Clock()
-=======
-
-import variable
-import models.player as player
-from maze_generator import Maze
->>>>>>> 677c244e8d6e0d0bcce81ccaa0034d3756e6b026
 
 class Level:
     def __init__(self, screen, font, gameStateManager, player_sprite):
-        self.display = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
+        self.display = screen
         self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
-        
         # create a maze instance once and reuse it
         self.maze = Maze(self.display)
-<<<<<<< HEAD
         self.maze.generate(0,0)
         self.maze_surface = pygame.Surface((SCREENWIDTH, SCREENHEIGHT))
         self.maze_surface.fill("#50b032")
@@ -51,12 +43,6 @@ class Level:
         '''self.display.fill("#50b032") # pou grass green
         self.maze.draw_grid() # draw the maze grid'''
         self.display.blit(self.player_sprite, self.player_position)
-=======
-
-    def draw(self, model):
-        self.display.fill("#50b032") # pou grass green
-        self.display.blit(player.sprite, player.position)
->>>>>>> 677c244e8d6e0d0bcce81ccaa0034d3756e6b026
 
         # define text
         score_text = self.font.render(f"Score: , True, ")
@@ -100,29 +86,16 @@ class Level:
                 )
 
 if __name__ == "__main__":
-<<<<<<< HEAD
     # Dummy objects for testing
     dummy_font = pygame.font.SysFont(None, 36)
     dummy_sprite = pygame.Surface((40, 40))
     dummy_sprite.fill((255, 100, 100))          # red square as player
-=======
-    pygame.init()
-    screen = pygame.display.set_mode((variable.SCREENWIDTH, variable.SCREENHEIGHT))
-    pygame.display.set_caption("Pou Maze Game")
-    clock = pygame.time.Clock()
->>>>>>> 677c244e8d6e0d0bcce81ccaa0034d3756e6b026
 
     level = Level(screen, dummy_font, None, dummy_sprite)
     running = True
           
     while running:
-<<<<<<< HEAD
         
-=======
-        maze = Maze(screen)
-        maze.draw_grid()
-        maze.generate(0, 0)
->>>>>>> 677c244e8d6e0d0bcce81ccaa0034d3756e6b026
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
