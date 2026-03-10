@@ -2,8 +2,8 @@ import pygame
 import random
 
 
-CELL_SIZE = 20
-GRID_SIZE = 20
+CELL_SIZE = 50
+GRID_SIZE = 5
 OFFSET_X = 50
 OFFSET_Y = 50
 MAZE_WIDTH = GRID_SIZE * CELL_SIZE
@@ -16,25 +16,11 @@ YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-# Note: screen and clocks are provided by the caller (e.g. a view) so
-# the maze generator can render into whatever surface is appropriate.
-
 
 class Maze():
     def __init__(self, screen, grid_size=GRID_SIZE, cell_size=CELL_SIZE, offset_x=OFFSET_X, offset_y=OFFSET_Y):
-        """A simple maze generator.
-
-        Parameters
-        ----------
-        screen : pygame.Surface
-            Surface to draw the maze on. Provided by the caller (e.g. a view).
-        grid_size : int
-            Number of cells in each dimension.
-        cell_size : int
-            Pixel size of each cell.
-        offset_x, offset_y : int
-            Pixel offsets for the maze origin.
-        """
+        #we initialize the parameters:
+        # the grid size is the number of cells, the cell size is in pixels, and the offsets are where the maze starts on the screen. 
         self.screen = screen
         self.grid_size = grid_size
         self.cell_size = cell_size
@@ -43,40 +29,61 @@ class Maze():
         self.visited = set()
         self.stack = []
         self.solution = {}
-
+        self.grid_connections ={} # this is a dictionary that will store the connections between cells like cell_coords(x,y): [list of connected cell coords]. 
         # initial drawing
-        self.draw_grid()
+        self.draw_grid(screen)
+
+        for r in range(self.grid_size):
+            for c in range(self.grid_size):
+                self.grid_connections[(r,c)] = set() # we initialize the grid connections with empty sets for each cell, we will add to these sets as we remove walls between cells to kep track of where walls are.
 
     def locate_cell_corners(self, row, col):
         x = self.offset_x + col * self.cell_size # we start at the offset coords:(20,20) + the number of cells we have to move to the right (col) * the size of each cell
         y = self.offset_y + row * self.cell_size #the same for row but we move down instead of right
         return x, y
     
-    def draw_grid(self):
+    def draw_grid(self, screen):
         for row in range(self.grid_size):
             for col in range(self.grid_size):
                 x, y = self.locate_cell_corners(row, col)
-                pygame.draw.rect(self.screen, WHITE, (x - 1, y - 1, self.cell_size + 1, self.cell_size + 1), 1) 
+                pygame.draw.rect(screen, WHITE, (x - 1, y - 1, self.cell_size + 1, self.cell_size + 1), 1) 
                 # x,y is where it starts, then we draw a line of length cell_size in both directions to create the cell
 
     def draw_cell(self, row, col, color):
         x, y = self.locate_cell_corners(row, col)
-        pygame.draw.rect(self.screen, color, (x + 2, y + 2, self.cell_size - 3, self.cell_size - 3)) # we draw a rectangle that is slightly smaller than the cell to create a border effect
-        
+        pygame.draw.rect(self.screen, color, (x + 1, y + 1, self.cell_size -2, self.cell_size -2)) # we draw a rectangle that is slightly smaller than the cell to create a border effect
+    
     def remove_wall(self, row, col, direction):
+        dr, dc = 0, 0
+        self.operation = ''
         x,y = self.locate_cell_corners(row, col)
         
         if direction == 'right':
-            pygame.draw.line(self.screen, BLACK, (x + self.cell_size, y), (x + self.cell_size, y + self.cell_size), 3) # We draw over the line to make like it is erased
+            dr, dc = 0, 1
+            self.operation = 'right'
+            pygame.draw.line(self.screen, BLACK, (x + self.cell_size , y + 1 ), (x + self.cell_size, y + self.cell_size - 1.5), 4) # We draw over the line to make like it is erased
         elif direction == 'left':
-            pygame.draw.line(self.screen, BLACK, (x, y), (x, y + self.cell_size), 3)
+            dr, dc = 0, -1
+            self.operation = 'left'
+            pygame.draw.line(self.screen, BLACK, (x, y +1 ), (x, y + self.cell_size -1.5),4)
         elif direction == 'down':
-            pygame.draw.line(self.screen, BLACK, (x, y + self.cell_size), (x + self.cell_size, y + self.cell_size), 3)
+            dr, dc = 1, 0
+            self.operation = 'down'
+            pygame.draw.line(self.screen, BLACK, (x +1, y + self.cell_size), (x + self.cell_size - 1.5, y + self.cell_size), 4)
         elif direction == 'up':
-            pygame.draw.line(self.screen, BLACK, (x, y), (x + self.cell_size, y), 3)
-    
+            dr, dc = -1, 0 # -1x -0y (we remove the top wall of the cell)
+            self.operation = 'up'
+            pygame.draw.line(self.screen, BLACK, (x +1 , y), (x + self.cell_size - 1.5, y), 4)
+
+        next_row = row + dr 
+        next_col = col + dc
+
+        self.grid_connections[(row, col)].add(direction) 
+        self.grid_connections[(next_row, next_col)].add(self.operation)
+        
+
     def generate(self, start_row= 0, start_col =0):
-        # local clock so we don't rely on a global
+        # local clock so we don't rely on a globalĸ
         clock = pygame.time.Clock()
         self.stack.append((start_row, start_col))
         self.visited.add((start_row, start_col))
@@ -119,19 +126,20 @@ class Maze():
         exit_x = OFFSET_X + (GRID_SIZE - 1) * CELL_SIZE
         exit_y = OFFSET_Y + (GRID_SIZE) * CELL_SIZE
         pygame.draw.line(self.screen, BLACK, (exit_x, exit_y), (exit_x + CELL_SIZE, exit_y), 5)
-        self.draw_cell(0, 0, YELLOW) # row 0, col 0
-        self.draw_cell(GRID_SIZE-1, GRID_SIZE - 1, GREEN)
+        #self.draw_cell(0, 0, YELLOW) # row 0, col 0
+        #self.draw_cell(GRID_SIZE-1, GRID_SIZE - 1, GREEN)
         
         pygame.display.flip()
-        clock = pygame.time.Clock()
+        clock = pygame.time.Clock() #again local clock
         clock.tick(60)
+        print(f'connections: {self.grid_connections}')
 
 
 
-# when executed as a standalone script for testing
+# this is so it can be tested
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((600, 400))
+    screen = pygame.display.set_mode((600, 700))
     pygame.display.set_caption("Maze Generator")
     clock = pygame.time.Clock()
 
