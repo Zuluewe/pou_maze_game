@@ -2,7 +2,7 @@
 
 import pygame
 import food as food
-import views.variable as variable
+import screenvariable
 
 class Player:
     def __init__(self, position, sprite):
@@ -19,7 +19,7 @@ class Player:
         self.sprite = pygame.image.load("assets/images/pou_happy.png") # change from hungry to happy
 
 
-"""player_position = pygame.Vector2(variable.SCREENWIDTH() / 2, variable.SCREENHEIGHT() / 2) # position in middle
+"""player_position = pygame.Vector2(screenvariable.SCREENWIDTH() / 2, screenvariable.SCREENHEIGHT() / 2) # position in middle
 player_sprite = pygame.image.load("assets/images/pou_hungry.png")
 player_rect = player_sprite.get_rect
 

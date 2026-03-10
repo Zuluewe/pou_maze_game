@@ -2,19 +2,19 @@
 # takes input from player, manages colission and level progression
 
 import pygame
-from views.level import Level
-import views.screenvariable as screenvariable
+from level import Level
+import screenvariable
 
 # import views
-import views.start as Start
-import views.pause as Pause
-import views.game_over as End
-import views.level as Level
+import start as Start
+import pause as Pause
+import game_over as End
+import level as Level
 
 # import models
-import models.food as Food
-import models.time_bonus as timer
-import models.player as player
+import food as Food
+import time_bonus as timer
+import player as player
 
 class Game:
     def __init__(self):

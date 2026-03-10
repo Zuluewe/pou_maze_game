@@ -1,6 +1,6 @@
 # view
 
-import variable
+import screenvariable
 
 class GameOver:
     def __init__(self, display, font, gameStateManager, player_sprite):

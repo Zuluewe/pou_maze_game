@@ -1,6 +1,6 @@
 # view
 
-import views.screenvariable as screenvariable
+import screenvariable
 
 class Pause:
     def __init__(self, display, font, gameStateManager, player_sprite):

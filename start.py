@@ -1,7 +1,7 @@
 # view
 
 import pygame
-import views.screenvariable as screenvariable
+import screenvariable
 
 class Start:
     def __init__(self, display, gameStateManager, player_sprite = None):
