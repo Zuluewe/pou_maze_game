@@ -14,7 +14,7 @@ import level as Level
 # import models
 import food as Food
 import time_bonus as timer
-import player as player
+import player
 
 class Game:
     def __init__(self):
@@ -27,7 +27,11 @@ class Game:
         self.gameStateManager = GameStateManager("Start")
         
         # Create player
-        self.player = player.Player((screenvariable.SCREENWIDTH // 2, screenvariable.SCREENHEIGHT // 2), None)
+        player_sprite = pygame.image.load("assets/images/pou_hungry.png").convert_alpha()
+        self.player = player.Player((screenvariable.SCREENWIDTH // 2, screenvariable.SCREENHEIGHT // 2), player_sprite)
+
+        # font
+        self.font = pygame.font.Font("assets/PouFont.ttf", 32)
         
         # Create views and pass player sprite
         self.start = Start.Start(self.display, self.gameStateManager, self.font, self.player.sprite)

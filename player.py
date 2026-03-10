@@ -8,9 +8,7 @@ class Player:
     def __init__(self, position, sprite):
         self.position = position
         self.sprite = sprite
-        self.rect = self.sprite.get_rect(topleft=position)
-
-    sprite = pygame.image.load("assets/images/pou_hungry.png") # identify default sprite
+        self.rect = self.sprite.get_rect(topleft=self.position)
 
     def draw(self, screen):
         screen.blit(self.sprite, self.rect)
