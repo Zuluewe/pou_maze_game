@@ -38,7 +38,7 @@ class Start:
         self.display.blit(start_text, (((variable.SCREENWIDTH - start_text_width) // 2, variable.SCREENHEIGHT // 2 - 150))) # display start text
 
 # controller
-"""if __name__ == "__main__":
+if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((variable.SCREENWIDTH, variable.SCREENHEIGHT))
     pygame.display.set_caption("Pou Maze Game: Start")
@@ -64,4 +64,3 @@ class Start:
         clock.tick(variable.FPS)
     pygame.quit()
 
-"""

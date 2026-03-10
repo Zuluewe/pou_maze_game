@@ -14,18 +14,19 @@ MAZE_WIDTH = GRID_SIZE * CELL_SIZE
 
 
 pygame.init()
-screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
+display = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
 pygame.display.set_caption("Level")
+font = pygame.font.Font("assets/PouFont.ttf", 32)
 clock = pygame.time.Clock()
 
 class Level:
-    def __init__(self, screen, font, gameStateManager, player_sprite):
-        self.display = screen
+    def __init__(self, display, gameStateManager, font, player_sprite):
+        self.display = display
         self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
         # create a maze instance once and reuse it
-        self.maze = Maze(self.display)
+        self.maze = Maze(self.display, GRID_SIZE, CELL_SIZE, OFFSET_X, OFFSET_Y,("#50b032"))
         self.maze.generate(0,0)
         self.maze_surface = pygame.Surface((SCREENWIDTH, SCREENHEIGHT))
         self.maze_surface.fill("#50b032")
@@ -38,14 +39,17 @@ class Level:
         self.player_position = (
             self.maze.offset_x + self.player_col * self.maze.cell_size + half - self.player_sprite.get_width() // 2,
             self.maze.offset_y + self.player_row * self.maze.cell_size + half - self.player_sprite.get_height() // 2
+        
         )
+        self.draw() # draw the initial state of the level
+        self.update() # update the level to set the initial player position
     def draw(self):
         '''self.display.fill("#50b032") # pou grass green
         self.maze.draw_grid() # draw the maze grid'''
         self.display.blit(self.player_sprite, self.player_position)
 
         # define text
-        score_text = self.font.render(f"Score: , True, ")
+        score_text = font.render(f"Score: 0", True, "white")
 
         # render text
         self.display.blit(score_text, (10, 10))
@@ -91,7 +95,7 @@ if __name__ == "__main__":
     dummy_sprite = pygame.Surface((40, 40))
     dummy_sprite.fill((255, 100, 100))          # red square as player
 
-    level = Level(screen, dummy_font, None, dummy_sprite)
+    level = Level(display, None, dummy_font, dummy_sprite)
     running = True
           
     while running:
