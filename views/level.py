@@ -26,11 +26,11 @@ class Level:
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
         # create a maze instance once and reuse it
+        
         self.maze = Maze(self.display, GRID_SIZE, CELL_SIZE, OFFSET_X, OFFSET_Y,("#50b032"))
-        self.maze.generate(0,0)
-        self.maze_surface = pygame.Surface((SCREENWIDTH, SCREENHEIGHT))
-        self.maze_surface.fill("#50b032")
-        self.maze.draw_grid(screen=self.maze_surface)
+        
+        
+        
         
         #(r,c) coordinates for the player position
         self.player_row = 0
@@ -44,8 +44,9 @@ class Level:
         self.draw() # draw the initial state of the level
         self.update() # update the level to set the initial player position
     def draw(self):
-        '''self.display.fill("#50b032") # pou grass green
-        self.maze.draw_grid() # draw the maze grid'''
+        self.display.fill("#50b032") # pou grass green
+        self.maze.draw_grid(self.display) # draw the maze grid'''
+        self.maze.generate(20,20)
         self.display.blit(self.player_sprite, self.player_position)
 
         # define text
