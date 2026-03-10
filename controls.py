@@ -3,22 +3,23 @@
 
 import pygame
 
+import views.variable
+
 # import views
 import views.start as Start
 import views.pause as Pause
 import views.game_over as End
 import views.level as Level
 
-
-
-SCREENWIDTH = 1280
-SCREENHEIGHT = 720
-FPS = 60
+# import models
+import models.food as Food
+import models.time_bonus as timer
+import models.player as player
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
+        self.screen = pygame.display.set_mode((variable.SCREENWIDTH, variable.SCREENHEIGHT))
         pygame.display.set_caption("Pou Maze Game")
         self.clock = pygame.time.Clock()
 
