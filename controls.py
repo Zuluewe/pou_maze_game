@@ -3,7 +3,7 @@
 
 import pygame
 
-import views.variable
+import views.screenvariable as screenvariable
 
 # import views
 import views.start as Start
@@ -19,27 +19,67 @@ import models.player as player
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((variable.SCREENWIDTH, variable.SCREENHEIGHT))
+        self.display = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT))
         pygame.display.set_caption("Pou Maze Game")
         self.clock = pygame.time.Clock()
 
-        # font
         self.font = pygame.font.Font("assets/PouFont.ttf", 32)
+        self.gameStateManager = GameStateManager("Start")
+        
+        # Create player
+        self.player = player.Player((screenvariable.SCREENWIDTH // 2, screenvariable.SCREENHEIGHT // 2), None)
+        
+        # Create views and pass player sprite
+        self.start = Start.Start(self.display, self.gameStateManager, self.font, self.player.sprite)
+        self.level = Level.Level(self.display, self.gameStateManager, self.font, self.player.sprite)
+        self.pause = Pause.Pause(self.display, self.gameStateManager, self.font, self.player.sprite)
+        self.game_over = End.GameOver(self.display, self.gameStateManager, self.font, self.player.sprite)
 
-        self.gameStateManager = GameStateManager("Menu")
-        self.start = Start(self.screen, self.gameStateManager, self.font)
-        self.level = Level(self.screen, self.gameStateManager, self.font)
-        self.pause = Pause(self.screen, self.gameStateManager, self.font)
-        self.pause = End(self.screen, self.gameStateManager, self.font)
-
-        self.states = {"Menu": self.start, "Level": self.level, "Pause": self.pause}
+        self.states = {
+            "Start": self.start, 
+            "Level": self.level, 
+            "Pause": self.pause,
+            "GameOver": self.game_over
+        }
 
     def run(self):
-        while True:
-            self.states[self.gameStateManager.get_states()].run()
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT: # lets player quit by clciking exit button
+                    running = False
 
+                self.handle_input(event) # lets you manage game state with input
+            
+            # draw current view
+            current_view = self.states[self.gameStateManager.get_states()]
+            current_view.draw(self)
+            
             pygame.display.update()
-            self.clock.tick(FPS)
+            self.clock.tick(screenvariable.FPS)
+        
+        pygame.quit()
+    
+    def handle_input(self, event):
+        current_state = self.gameStateManager.get_states()
+        
+        if current_state == "Start":
+            if event.type == pygame.KEYDOWN: # if you press a key you start the game
+                self.gameStateManager.set_states("Level")
+        
+        elif current_state == "Level":  # if you press escape on level you pause
+            if event.type == event.key == pygame.K_ESCAPE:
+                self.gameStateManager.set_states("Pause")
+        
+        elif current_state == "Pause":
+            if event.type == pygame.KEYDOWN: # if you press a key on pause menu you go back to the game
+                self.gameStateManager.set_states("Level")
+            elif event.type == pygame.K_ESCAPE: # if you press escape in pause menu its game over
+                self.gameStateManager.set_states("GameOver")
+
+        elif current_state == "GameOver":
+            if event.type == event.key == pygame.K_r: # if you click "r" you restart the level
+                self.gameStateManager.set_states("Level")
 
 class GameState:
     def __init__(self):
@@ -61,4 +101,3 @@ if __name__ == "__main__":
     game = Game()
     game.run()
 
-    

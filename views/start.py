@@ -1,7 +1,7 @@
 # view
 
 import pygame
-import variable
+import views.screenvariable as screenvariable
 
 class Start:
     def __init__(self, display, gameStateManager, player_sprite = None):
@@ -29,18 +29,18 @@ class Start:
         player_sprite_width = player_sprite.get_width()
         
         # render
-        pygame.draw.rect(self.display, "#50b032", (0, variable.SCREENHEIGHT - 250, variable.SCREENWIDTH, 250)) # screen, color, x position, y position, square width, square height
-        self.display.blit(background_picture, (0, variable.SCREENHEIGHT - 175 - background_picture_height)) # picture, x position, y position
+        pygame.draw.rect(self.display, "#50b032", (0, screenvariable.SCREENHEIGHT - 250, screenvariable.SCREENWIDTH, 250)) # screen, color, x position, y position, square width, square height
+        self.display.blit(background_picture, (0, screenvariable.SCREENHEIGHT - 175 - background_picture_height)) # picture, x position, y position
 
-        self.display.blit(player_sprite, (variable.SCREENWIDTH / 2 - player_sprite_width / 2, (variable.SCREENHEIGHT / 3) * 2))
+        self.display.blit(player_sprite, (screenvariable.SCREENWIDTH / 2 - player_sprite_width / 2, (screenvariable.SCREENHEIGHT / 3) * 2))
         
-        self.display.blit(welcome_text, (((variable.SCREENWIDTH - welcome_text_width) // 2, variable.SCREENHEIGHT // 2 - 250))) # display welcome text
-        self.display.blit(start_text, (((variable.SCREENWIDTH - start_text_width) // 2, variable.SCREENHEIGHT // 2 - 150))) # display start text
+        self.display.blit(welcome_text, (((screenvariable.SCREENWIDTH - welcome_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 250))) # display welcome text
+        self.display.blit(start_text, (((screenvariable.SCREENWIDTH - start_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 150))) # display start text
 
 # controller
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((variable.SCREENWIDTH, variable.SCREENHEIGHT))
+    screen = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT))
     pygame.display.set_caption("Pou Maze Game: Start")
     clock = pygame.time.Clock()
     running = True
@@ -61,6 +61,6 @@ if __name__ == "__main__":
         
         start_view.draw(model)
         pygame.display.flip()
-        clock.tick(variable.FPS)
+        clock.tick(screenvariable.FPS)
     pygame.quit()
 
