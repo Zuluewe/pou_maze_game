@@ -4,8 +4,8 @@ import random
 
 CELL_SIZE = 50
 GRID_SIZE = 5
-OFFSET_X = 50
-OFFSET_Y = 50
+OFFSET_X = 150
+OFFSET_Y = 150
 MAZE_WIDTH = GRID_SIZE * CELL_SIZE
 
 
@@ -55,33 +55,27 @@ class Maze():
         pygame.draw.rect(draw_surface, color, (x + 1, y + 1, self.cell_size -2, self.cell_size -2)) # we draw a rectangle that is slightly smaller than the cell to create a border effect
     
     def remove_wall(self, row, col, direction, color, target_screen = None):
-        dr, dc = 0, 0
-        self.operation = ''
-        x,y = self.locate_cell_corners(row, col)
         draw_surface = target_screen if target_screen is not None else self.screen
-        
+        x,y = self.locate_cell_corners(row, col)
+
         if direction == 'right':
-            dr, dc = 0, 1
-            self.operation = 'right'
+            opposite = 'left'
             pygame.draw.line(draw_surface, color, (x + self.cell_size , y + 1 ), (x + self.cell_size, y + self.cell_size - 1.5), 4) # We draw over the line to make like it is erased
         elif direction == 'left':
-            dr, dc = 0, -1
-            self.operation = 'left'
+            opposite = 'right'
             pygame.draw.line(draw_surface, color, (x, y +1 ), (x, y + self.cell_size -1.5),4)
         elif direction == 'down':
-            dr, dc = 1, 0
-            self.operation = 'down'
+            opposite = 'up'
             pygame.draw.line(draw_surface, color, (x +1, y + self.cell_size), (x + self.cell_size - 1.5, y + self.cell_size), 4)
         elif direction == 'up':
-            dr, dc = -1, 0 # -1x -0y (we remove the top wall of the cell)
-            self.operation = 'up'
+            opposite = 'down'
             pygame.draw.line(draw_surface, color, (x +1 , y), (x + self.cell_size - 1.5, y), 4)
 
-        next_row = row + dr 
-        next_col = col + dc
+        next_row = row + {'right': 0, 'left': 0, 'down': 1, 'up': -1}[direction]  # new_row is the currentRow + 1 if we go down or -1 if we go up, and it stays the same if we go right or left
+        next_col = col + {'right': 1, 'left': -1, 'down': 0, 'up': 0}[direction] # we are saying it has to chose an object from the dictionary we just created baseed on the direection
 
         self.grid_connections[(row, col)].add(direction) 
-        self.grid_connections[(next_row, next_col)].add(self.operation)
+        self.grid_connections[(next_row, next_col)].add(opposite)
         
 
     def generate(self, start_row= 0, start_col =0):
@@ -124,11 +118,11 @@ class Maze():
     
     def open_entrance_and_exit(self, color, target_screen = None):
         draw_surface = target_screen if target_screen is not None else self.screen
-        pygame.draw.line(draw_surface, color, (OFFSET_X, OFFSET_Y), (OFFSET_X + CELL_SIZE, OFFSET_Y), 5)
+        pygame.draw.line(draw_surface, BLACK, (OFFSET_X, OFFSET_Y), (OFFSET_X + CELL_SIZE, OFFSET_Y), 5)
         exit_x = OFFSET_X + (GRID_SIZE - 1) * CELL_SIZE
         exit_y = OFFSET_Y + (GRID_SIZE) * CELL_SIZE
-        pygame.draw.line(draw_surface, color, (exit_x, exit_y), (exit_x + CELL_SIZE, exit_y), 5)
-        #self.draw_cell(0, 0, YELLOW) # row 0, col 0
+        pygame.draw.line(draw_surface, BLACK, (exit_x, exit_y), (exit_x + CELL_SIZE, exit_y), 5)
+        self.draw_cell(0, 0, color) # row 0, col 0
         #self.draw_cell(GRID_SIZE-1, GRID_SIZE - 1, GREEN)
         
         pygame.display.flip()
@@ -146,8 +140,8 @@ if __name__ == "__main__":
     pygame.display.set_caption("Maze Generator")
     clock = pygame.time.Clock()
 
-    maze = Maze(screen, GRID_SIZE, CELL_SIZE, OFFSET_X, OFFSET_Y,("#50b032"))
-    maze.draw_grid(screen)
+    maze = Maze(screen, GRID_SIZE, CELL_SIZE, OFFSET_X, OFFSET_Y,("#434d3f"))
+    
     maze.generate(0, 0)
 
     running = True
