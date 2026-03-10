@@ -1,7 +1,9 @@
 # view
 
 import pygame
-from maze_generator import Maze
+#from maze_generator import Maze
+#from views.maze_generator import Maze
+import maze_generator
 SCREENWIDTH = 1060
 SCREENHEIGHT = 720
 FPS = 60
@@ -26,27 +28,25 @@ class Level:
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
         # create a maze instance once and reuse it
-        
-        self.maze = Maze(self.display, GRID_SIZE, CELL_SIZE, OFFSET_X, OFFSET_Y,("#50b032"))
-        
-        
-        
-        
         #(r,c) coordinates for the player position
+        
         self.player_row = 0
         self.player_col = 0
+        self.maze = maze_generator.Maze(self.display, GRID_SIZE, CELL_SIZE, OFFSET_X, OFFSET_Y,("#50b032"))
         half = self.maze.cell_size // 2
         self.player_position = (
             self.maze.offset_x + self.player_col * self.maze.cell_size + half - self.player_sprite.get_width() // 2,
             self.maze.offset_y + self.player_row * self.maze.cell_size + half - self.player_sprite.get_height() // 2
         
         )
-        self.draw() # draw the initial state of the level
+        
+        self.draw() # draw the initial state of the level      
         self.update() # update the level to set the initial player position
+
     def draw(self):
         self.display.fill("#50b032") # pou grass green
-        self.maze.draw_grid(self.display) # draw the maze grid'''
-        self.maze.generate(20,20)
+        self.maze.draw_grid(target_screen=self.display) # draw the maze grid'''
+        self.maze.generate(0,0)
         self.display.blit(self.player_sprite, self.player_position)
 
         # define text

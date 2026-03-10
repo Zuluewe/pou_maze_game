@@ -2,7 +2,7 @@
 # takes input from player, manages colission and level progression
 
 import pygame
-
+from views.level import Level
 import views.screenvariable as screenvariable
 
 # import views
