@@ -28,6 +28,7 @@ class Maze():
         self.offset_y = offset_y
         self.color = color 
         self.visited = set()
+        self.path = set() # this is a set that will store the cells that are part of the maze path
         self.stack = []
         self.solution = {}
         self.grid_connections ={} # this is a dictionary that will store the connections between cells like cell_coords(x,y): [list of connected cell coords]. 
@@ -78,11 +79,13 @@ class Maze():
         self.grid_connections[(next_row, next_col)].add(opposite)
         
 
-    def generate(self, start_row= 0, start_col =0):
+    def generate(self, start_row= 0, start_col =0, target_screen = None):
+        target_screen = target_screen if target_screen is not None else self.screen
         # local clock so we don't rely on a globalĸ
         clock = pygame.time.Clock()
         self.stack.append((start_row, start_col))
         self.visited.add((start_row, start_col))
+        self.path.add((start_row, start_col))
 
         while self.stack: # while len(self.stack) > 0
             row, col = self.stack[-1] # we look at the top of the stack but we dont pop it yet because we might need to backtrack
@@ -104,18 +107,25 @@ class Maze():
                 neighbor_row, neighbor_col, direction = random.choice(neighbors) # we randomly choose a neighbor to visit
                 self.remove_wall(row, col, direction, self.color, None) # we remove the wall between the current cell and the chosen neighbor
                 self.visited.add((neighbor_row, neighbor_col)) # we mark the chosen neighbor as visited
-                self.stack.append((neighbor_row, neighbor_col)) # we add the chosen neighbor to the stack to continue the maze generation from there
+                self.path.add((neighbor_row, neighbor_col)) # we add the chosen neighbor to the maze path
+                self.stack.append((neighbor_row, neighbor_col)) # we add the chosen neighbor to the stack to continue the maze generation from ther                
                 self.draw_cell(neighbor_row, neighbor_col, self.color, None) # make the maze path
-
+                
                 self.solution[(neighbor_row, neighbor_col)] = (row, col) # we store this cell in the solution dict saying: before_cell_choords : solution_to_this_cell_coords
+                
                 pygame.display.flip()
                 clock.tick(120)            
             else:
                 self.stack.pop() # if there are no unvisited neighbors we backtrack by popping the stack            
             
         self.open_entrance_and_exit(self.color, None) 
+             
+    def redraw_paths(self, target_screen=None):
+        draw_surface = target_screen if target_screen is not None else self.screen
+        for row, col in self.path:
+            self.draw_cell(row, col, self.color, target_screen=draw_surface)
             
-    
+
     def open_entrance_and_exit(self, color, target_screen = None):
         draw_surface = target_screen if target_screen is not None else self.screen
         pygame.draw.line(draw_surface, BLACK, (OFFSET_X, OFFSET_Y), (OFFSET_X + CELL_SIZE, OFFSET_Y), 5)
@@ -146,6 +156,7 @@ if __name__ == "__main__":
 
     running = True
     while running:
+        maze.redraw_paths(None)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
