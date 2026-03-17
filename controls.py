@@ -69,6 +69,7 @@ class Game:
         
         if current_state == "Start":
             if event.type == pygame.KEYDOWN: # if you press a key you start the game
+                pygame.event.clear() # clear the event queue to prevent the key press from affecting the level
                 self.gameStateManager.set_states("Level")
         
         elif current_state == "Level":  # if you press escape on level you pause

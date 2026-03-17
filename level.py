@@ -4,26 +4,16 @@ import pygame
 #from maze_generator import Maze
 #from views.maze_generator import Maze
 import maze_generator
-SCREENWIDTH = 1060
-SCREENHEIGHT = 720
-FPS = 60
+import screenvariable
 
-CELL_SIZE = 50
+CELL_SIZE = 100
 GRID_SIZE = 5
-OFFSET_X = 150
-OFFSET_Y = 150
+OFFSET_X = 400
+OFFSET_Y = 100
 MAZE_WIDTH = GRID_SIZE * CELL_SIZE
 
 
-pygame.init()
-display = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
-display.fill("#50b032") # grass green
-pygame.display.set_caption("Level")
-font = pygame.font.Font("assets/PouFont.ttf", 32)
-clock = pygame.time.Clock()
-running = True
-dt = 0
-gameStateManager = 'Level' # dummy for testing, should be passed from Game class
+
 
 class Level:
     def __init__(self, display, gameStateManager, font, player_sprite):
@@ -48,9 +38,10 @@ class Level:
         ) # 50 + (0 * 50) + 25 - half of the player sprite = 75, same for y. This centers the player sprite in the cell 
 
         
-        self.draw() # draw the initial state of the level      
+        self.draw(self) # draw the initial state of the level      
 
-    def draw(self):  
+    def draw(self, model):  
+        font = pygame.font.Font("assets/PouFont.ttf", 32)
             
         self.maze.redraw_paths(target_screen=self.display)
         self.display.blit(self.player_sprite, self.player_position)
@@ -100,18 +91,31 @@ class Level:
 
 if __name__ == "__main__":
     # Dummy objects for testing
+    pygame.init()
+    display = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT))
+    display.fill("#50b032") # grass green
+    pygame.display.set_caption("Level")
+    font = pygame.font.Font("assets/PouFont.ttf", 32)
+    clock = pygame.time.Clock()
+    running = True
+    dt = 0
+    gameStateManager = 'Level' # dummy for testing, should be passed from Game class
     
-    dummy_sprite = pygame.Surface((10, 10))
     dummy_sprite= pygame.image.load("assets/images/pou_happy.png")  
     rezized_sprite = pygame.transform.smoothscale(dummy_sprite, (CELL_SIZE -10, CELL_SIZE - 10))
 
     level = Level(display, None, font, rezized_sprite)
     running = True
-          
+    class Model:
+        pass
+    
+    model = Model()
+    model = Model()
     while running:
         dt = clock.tick(60) / 500.0
         level.update(dt) # update the level state based on input
-        level.draw()
+        level.draw(model)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False

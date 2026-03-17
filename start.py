@@ -41,12 +41,15 @@ class Start:
 # controller
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT))
+    gameStateManager = 'Start' # dummy for testing, should be passed from Game class
+    screen = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT ))
     pygame.display.set_caption("Pou Maze Game: Start")
     clock = pygame.time.Clock()
     running = True
+    font = pygame.font.Font("assets/PouFont.ttf", 32)
+    player_sprite = pygame.image.load("assets/images/pou_happy.png")
     
-    start_view = Start(screen, None)
+    start_view = Start(screen, font, gameStateManager, player_sprite) # dummy font and gameStateManager for testing, should be passed from Game class
     
     class Model:
         pass
