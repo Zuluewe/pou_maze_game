@@ -1,12 +1,8 @@
 import pygame
 import random
+import screenvariable
 
 
-CELL_SIZE = 50
-GRID_SIZE = 5
-OFFSET_X = 150
-OFFSET_Y = 150
-MAZE_WIDTH = GRID_SIZE * CELL_SIZE
 
 
 # colors
@@ -128,10 +124,10 @@ class Maze():
 
     def open_entrance_and_exit(self, color, target_screen = None):
         draw_surface = target_screen if target_screen is not None else self.screen
-        pygame.draw.line(draw_surface, BLACK, (OFFSET_X, OFFSET_Y), (OFFSET_X + CELL_SIZE, OFFSET_Y), 5)
-        exit_x = OFFSET_X + (GRID_SIZE - 1) * CELL_SIZE
-        exit_y = OFFSET_Y + (GRID_SIZE) * CELL_SIZE
-        pygame.draw.line(draw_surface, BLACK, (exit_x, exit_y), (exit_x + CELL_SIZE, exit_y), 5)
+        pygame.draw.line(draw_surface, BLACK, (screenvariable.OFFSET_X, screenvariable.OFFSET_Y), (screenvariable.OFFSET_X + screenvariable.CELL_SIZE, screenvariable.OFFSET_Y), 5)
+        exit_x = screenvariable.OFFSET_X + (screenvariable.GRID_SIZE - 1) * screenvariable.CELL_SIZE
+        exit_y = screenvariable.OFFSET_Y + (screenvariable.GRID_SIZE) * screenvariable.CELL_SIZE
+        pygame.draw.line(draw_surface, BLACK, (exit_x, exit_y), (exit_x + screenvariable.CELL_SIZE, exit_y), 5)
         self.draw_cell(0, 0, color) # row 0, col 0
         #self.draw_cell(GRID_SIZE-1, GRID_SIZE - 1, GREEN)
         
@@ -145,12 +141,12 @@ class Maze():
 # this is so it can be tested
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((600, 700))
+    screen = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT))
     screen.fill("#50b032") # pou grass green
     pygame.display.set_caption("Maze Generator")
     clock = pygame.time.Clock()
 
-    maze = Maze(screen, GRID_SIZE, CELL_SIZE, OFFSET_X, OFFSET_Y,("#434d3f"))
+    maze = Maze(screen, screenvariable.GRID_SIZE, screenvariable.CELL_SIZE, screenvariable.OFFSET_X, screenvariable.OFFSET_Y,("#434d3f"))
     
     maze.generate(0, 0)
 

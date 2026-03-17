@@ -6,14 +6,6 @@ import pygame
 import maze_generator
 import screenvariable
 
-CELL_SIZE = 100
-GRID_SIZE = 5
-OFFSET_X = 400
-OFFSET_Y = 100
-MAZE_WIDTH = GRID_SIZE * CELL_SIZE
-
-
-
 
 class Level:
     def __init__(self, display, gameStateManager, font, player_sprite):
@@ -25,7 +17,7 @@ class Level:
         self.player_row = 0
         self.player_col = 0
     # generate the maze once during initialization
-        self.maze = maze_generator.Maze(self.display, GRID_SIZE, CELL_SIZE, OFFSET_X, OFFSET_Y,("#3f5837"))
+        self.maze = maze_generator.Maze(self.display, screenvariable.GRID_SIZE, screenvariable.CELL_SIZE, screenvariable.OFFSET_X, screenvariable.OFFSET_Y,("#3f5837"))
         self.maze.generate(0,0) # generate the maze and draw it directly on the display
         self.move_cooldown = 0.20 #seconds between moves (0,20 = 5 moves/sec)
         self.move_timer = 0.0
@@ -40,17 +32,8 @@ class Level:
         
         self.draw(self) # draw the initial state of the level      
 
-    def draw(self, model):  
-        font = pygame.font.Font("assets/PouFont.ttf", 32)
-            
-        self.maze.redraw_paths(target_screen=self.display)
-        self.display.blit(self.player_sprite, self.player_position)
-        # define text
-        score_text = font.render(f"Score: 0", True, "white")
-        # render text
-        self.display.blit(score_text, (10, 10))
-        pygame.display.flip() # update the display after drawing everything
-        
+    
+
     def update(self, dt):
         self.move_timer += dt
 
@@ -87,7 +70,19 @@ class Level:
                         self.maze.offset_y + new_r * self.maze.cell_size + half - self.player_sprite.get_height() // 2 
                     )
                 self.move_timer = 0.0  # reset timer after move
-        
+
+    def draw(self, model):  
+        font = pygame.font.Font("assets/PouFont.ttf", 32)
+            
+        self.maze.redraw_paths(target_screen=self.display)
+        self.display.blit(self.player_sprite, self.player_position)
+        # define text
+        score_text = font.render(f"Score: 0", True, "white")
+        # render text
+        self.display.blit(score_text, (10, 10))
+        pygame.display.flip() # update the display after drawing everything
+        dt = clock.tick(60) / 500.0
+        self.update(dt)    
 
 if __name__ == "__main__":
     # Dummy objects for testing
@@ -102,7 +97,7 @@ if __name__ == "__main__":
     gameStateManager = 'Level' # dummy for testing, should be passed from Game class
     
     dummy_sprite= pygame.image.load("assets/images/pou_happy.png")  
-    rezized_sprite = pygame.transform.smoothscale(dummy_sprite, (CELL_SIZE -10, CELL_SIZE - 10))
+    rezized_sprite = pygame.transform.smoothscale(dummy_sprite, (screenvariable.CELL_SIZE -10, screenvariable.CELL_SIZE - 10))
 
     level = Level(display, None, font, rezized_sprite)
     running = True
@@ -112,8 +107,6 @@ if __name__ == "__main__":
     model = Model()
     model = Model()
     while running:
-        dt = clock.tick(60) / 500.0
-        level.update(dt) # update the level state based on input
         level.draw(model)
 
         for event in pygame.event.get():
