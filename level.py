@@ -8,9 +8,10 @@ import screenvariable
 
 
 class Level:
-    def __init__(self, display, gameStateManager, font, player_sprite):
-        self.clock = pygame.time.Clock() # local clock for the level, so it can control its own timing without affecting the main game loop
+    def __init__(self, display, gameStateManager, font, player_sprite, clock):
+        self.clock = clock # local clock for the level, so it can control its own timing without affecting the main game loop
         self.display = display
+        display.fill("#50b032")
         self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
@@ -100,7 +101,7 @@ if __name__ == "__main__":
     dummy_sprite= pygame.image.load("assets/images/pou_happy.png")  
     rezized_sprite = pygame.transform.smoothscale(dummy_sprite, (screenvariable.CELL_SIZE -10, screenvariable.CELL_SIZE - 10))
 
-    level = Level(display, None, font, rezized_sprite)
+    level = Level(display, None, font, rezized_sprite, clock) # pass dummy sprite and clock for testing
     running = True
     class Model:
         pass

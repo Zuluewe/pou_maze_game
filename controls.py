@@ -35,7 +35,7 @@ class Game:
         
         # Create views and pass player sprite
         self.start = Start.Start(self.display, self.gameStateManager, self.font, self.player.sprite)
-        self.level = Level.Level(self.display, self.gameStateManager, self.font, self.player.sprite)
+        self.level = Level.Level(self.display, self.gameStateManager, self.font, self.player.sprite, self.clock)
         self.pause = Pause.Pause(self.display, self.gameStateManager, self.font, self.player.sprite)
         self.game_over = End.GameOver(self.display, self.gameStateManager, self.font, self.player.sprite)
 
