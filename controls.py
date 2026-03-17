@@ -65,6 +65,7 @@ class Game:
         pygame.quit()
     
     def handle_input(self, event):
+        keys = pygame.key.get_pressed() 
         current_state = self.gameStateManager.get_states()
         
         if current_state == "Start":
@@ -73,15 +74,15 @@ class Game:
                 self.gameStateManager.set_states("Level")
         
         elif current_state == "Level":  # if you press escape on level you pause
-            if event.type == pygame.KEYDOWN:
+            if keys[pygame.K_ESCAPE]:
                 self.gameStateManager.set_states("Pause")
         
         elif current_state == "Pause":
-            if event.type == pygame.KEYDOWN: # if you press a key on pause menu you go back to the game
+            if keys[pygame.K_ESCAPE]: # if you press escape you go back to the game
                 self.gameStateManager.set_states("Level")
 
         elif current_state == "GameOver":
-            if event.type == pygame.K_r: # if you click "r" you restart the level
+            if keys[pygame.K_r]: # if you click "r" you restart the level
                 self.gameStateManager.set_states("Level")
 
 class GameState:
