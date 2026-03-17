@@ -4,10 +4,10 @@ import pygame
 import screenvariable
 
 class Pause:
-    def __init__(self, display, font, player_sprite = None):
+    def __init__(self, display, font, gameStateManager, player_sprite = None):
         self.display = display
         self.font = font
-        # self.gameState = gameStateManager
+        self.gameState = gameStateManager
         self.player_sprite = player_sprite
 
     def draw(self, model):
@@ -31,12 +31,11 @@ class Pause:
 
         # render text
         pygame.draw.rect(self.display, "#3690df", (0, 0, screenvariable.SCREENWIDTH, 250)) # screen, color, x position, y position, square width, square height
-        pygame.draw.rect(self.display, "#50b032", (0, 250, screenvariable.SCREENWIDTH, 100)) # screen, color, x position, y position, square width, square height
+        pygame.draw.rect(self.display, "#50b032", (0, 250, screenvariable.SCREENWIDTH, 50)) # screen, color, x position, y position, square width, square height
         self.display.blit(background_picture, (0, (screenvariable.SCREENHEIGHT - background_picture_height) // 10)) # picture, x position, y position
 
-
-        self.display.blit(pause_text, (((screenvariable.SCREENWIDTH - pause_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 250))) # display game over
-        self.display.blit(return_text, (((screenvariable.SCREENWIDTH - return_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 125))) # display death
+        self.display.blit(pause_text, (((screenvariable.SCREENWIDTH - pause_text_width) // 2, screenvariable.SCREENHEIGHT // 2 ))) # display game over
+        self.display.blit(return_text, (((screenvariable.SCREENWIDTH - return_text_width) // 2, screenvariable.SCREENHEIGHT // 2 + 100))) # display death
 
 # controller
 if __name__ == "__main__":
