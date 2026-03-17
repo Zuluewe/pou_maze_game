@@ -72,7 +72,7 @@ class Game:
                 self.gameStateManager.set_states("Level")
         
         elif current_state == "Level":  # if you press escape on level you pause
-            if event.type == event.key == pygame.K_ESCAPE:
+            if event.type == pygame.K_ESCAPE:
                 self.gameStateManager.set_states("Pause")
         
         elif current_state == "Pause":
@@ -82,7 +82,7 @@ class Game:
                 self.gameStateManager.set_states("GameOver")
 
         elif current_state == "GameOver":
-            if event.type == event.key == pygame.K_r: # if you click "r" you restart the level
+            if event.type == pygame.K_r: # if you click "r" you restart the level
                 self.gameStateManager.set_states("Level")
 
 class GameState:

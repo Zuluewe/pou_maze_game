@@ -23,6 +23,7 @@ font = pygame.font.Font("assets/PouFont.ttf", 32)
 clock = pygame.time.Clock()
 running = True
 dt = 0
+gameStateManager = 'Level' # dummy for testing, should be passed from Game class
 
 class Level:
     def __init__(self, display, gameStateManager, font, player_sprite):
@@ -34,12 +35,8 @@ class Level:
         self.player_row = 0
         self.player_col = 0
     # generate the maze once during initialization
-        self.maze_surface = pygame.Surface((MAZE_WIDTH, MAZE_WIDTH))
         self.maze = maze_generator.Maze(self.display, GRID_SIZE, CELL_SIZE, OFFSET_X, OFFSET_Y,("#3f5837"))
         self.maze.generate(0,0) # generate the maze and draw it directly on the display
-        
-        
-
         self.move_cooldown = 0.20 #seconds between moves (0,20 = 5 moves/sec)
         self.move_timer = 0.0
     #player start
@@ -55,7 +52,6 @@ class Level:
 
     def draw(self):  
             
-        
         self.maze.redraw_paths(target_screen=self.display)
         self.display.blit(self.player_sprite, self.player_position)
         # define text
@@ -113,7 +109,7 @@ if __name__ == "__main__":
     running = True
           
     while running:
-        dt = clock.tick(60) / 1000.0
+        dt = clock.tick(60) / 500.0
         level.update(dt) # update the level state based on input
         level.draw()
         for event in pygame.event.get():
