@@ -9,6 +9,7 @@ import screenvariable
 
 class Level:
     def __init__(self, display, gameStateManager, font, player_sprite):
+        self.clock = pygame.time.Clock() # local clock for the level, so it can control its own timing without affecting the main game loop
         self.display = display
         self.font = font
         self.gameState = gameStateManager
@@ -81,7 +82,7 @@ class Level:
         # render text
         self.display.blit(score_text, (10, 10))
         pygame.display.flip() # update the display after drawing everything
-        dt = clock.tick(60) / 500.0
+        dt = self.clock.tick(60) / 500.0
         self.update(dt)    
 
 if __name__ == "__main__":

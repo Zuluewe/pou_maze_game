@@ -73,7 +73,7 @@ class Game:
                 self.gameStateManager.set_states("Level")
         
         elif current_state == "Level":  # if you press escape on level you pause
-            if event.type == pygame.K_ESCAPE:
+            if event.type == pygame.KEYDOWN:
                 self.gameStateManager.set_states("Pause")
         
         elif current_state == "Pause":
