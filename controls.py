@@ -79,8 +79,6 @@ class Game:
         elif current_state == "Pause":
             if event.type == pygame.KEYDOWN: # if you press a key on pause menu you go back to the game
                 self.gameStateManager.set_states("Level")
-            elif event.type == pygame.K_ESCAPE: # if you press escape in pause menu its game over
-                self.gameStateManager.set_states("GameOver")
 
         elif current_state == "GameOver":
             if event.type == pygame.K_r: # if you click "r" you restart the level

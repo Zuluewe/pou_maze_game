@@ -3,16 +3,8 @@
 import pygame
 import screenvariable
 
-"""        elif current_state == "Pause":
-            if event.type == pygame.KEYDOWN: # if you press a key on pause menu you go back to the game
-                self.gameStateManager.set_states("Level")
-            elif event.type == pygame.K_ESCAPE: # if you press escape in pause menu its game over
-                self.gameStateManager.set_states("Pause")"""
-
-gameStateManager = 'Pause'
-
 class Pause:
-    def __init__(self, display, font, player_sprite):
+    def __init__(self, display, font, player_sprite = None):
         self.display = display
         self.font = font
         # self.gameState = gameStateManager
@@ -20,46 +12,31 @@ class Pause:
 
     def draw(self, model):
         self.display.fill("#954d25") # pou dirt
-        self.display.blit(self.player_sprite, model.player_position)
-
-        # define text
-        pause_text = self.font.render("Game Paused", True, "white")
-        return_text = self.font.render("Press any key to continue", True, "white")
-
-        # render text
-        self.display.blit(pause_text, (screenvariable.SCREENWIDTH // 2, screenvariable.SCREENHEIGHT // 2))
-        self.display.blit(return_text, (screenvariable.SCREENWIDTH // 2, screenvariable.SCREENHEIGHT // 2 - 100))
-        def draw(self, model):
-        self.display.fill("#3690df") # dark grass
 
         # font
-        game_over_font = pygame.font.Font("assets/PouFont.ttf", 62)
-        pou_died_font = pygame.font.Font("assets/PouFont.ttf", 32)
+        pause_font = pygame.font.Font("assets/PouFont.ttf", 62)
         font = pygame.font.Font("assets/PouFont.ttf", 32)
 
-        # define
+        # define text
         background_picture = pygame.image.load("assets/images/forest_1.png").convert_alpha()
-        
-        game_over_text = game_over_font.render("Game Over", True, "white")
-        pou_died_text = font.render("Pou starved to death", True, "red")
-        score_text = font.render(f"Score:", True, "white")
-        restart_game_text = font.render("Press 'r' to restart game", True, "white")
+
+        pause_text = pause_font.render("Game Paused", True, "white")
+        return_text = font.render("Press any key to continue", True, "white")
 
         # get size
         background_picture_height = background_picture.get_height()
 
-        game_over_text_width = game_over_text.get_width()
-        pou_died_text_width = pou_died_text.get_width()
-        score_text_width = score_text.get_width()
-        restart_game_text_width = restart_game_text.get_width()
+        pause_text_width = pause_text.get_width()
+        return_text_width = return_text.get_width()
 
         # render text
-        self.display.blit(background_picture, (0, screenvariable.SCREENHEIGHT - background_picture_height + 35)) # picture, x position, y position
+        pygame.draw.rect(self.display, "#3690df", (0, 0, screenvariable.SCREENWIDTH, 250)) # screen, color, x position, y position, square width, square height
+        pygame.draw.rect(self.display, "#50b032", (0, 250, screenvariable.SCREENWIDTH, 100)) # screen, color, x position, y position, square width, square height
+        self.display.blit(background_picture, (0, (screenvariable.SCREENHEIGHT - background_picture_height) // 10)) # picture, x position, y position
 
-        self.display.blit(game_over_text, (((screenvariable.SCREENWIDTH - game_over_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 250))) # display game over
-        self.display.blit(pou_died_text, (((screenvariable.SCREENWIDTH - pou_died_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 125))) # display death
-        self.display.blit(score_text, (((screenvariable.SCREENWIDTH - score_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 25)))
-        self.display.blit(restart_game_text, (((screenvariable.SCREENWIDTH - restart_game_text_width) // 2, screenvariable.SCREENHEIGHT // 2 + 75)))
+
+        self.display.blit(pause_text, (((screenvariable.SCREENWIDTH - pause_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 250))) # display game over
+        self.display.blit(return_text, (((screenvariable.SCREENWIDTH - return_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 125))) # display death
 
 # controller
 if __name__ == "__main__":

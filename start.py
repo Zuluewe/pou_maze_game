@@ -24,9 +24,9 @@ class Start:
         player_sprite = pygame.image.load("assets/images/pou_happy.png")
 
         # get size
+        background_picture_height = background_picture.get_height()
         welcome_text_width = welcome_text.get_width()
         start_text_width = start_text.get_width()
-        background_picture_height = background_picture.get_height()
         player_sprite_width = player_sprite.get_width()
         
         # render

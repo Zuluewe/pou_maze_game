@@ -14,7 +14,6 @@ class GameOver:
 
         # font
         game_over_font = pygame.font.Font("assets/PouFont.ttf", 62)
-        pou_died_font = pygame.font.Font("assets/PouFont.ttf", 32)
         font = pygame.font.Font("assets/PouFont.ttf", 32)
 
         # define
