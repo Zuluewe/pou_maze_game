@@ -57,7 +57,12 @@ class Game:
             
             # draw current view
             current_view = self.states[self.gameStateManager.get_states()]
-            current_view.draw(self)
+            if current_view == self.level: # 
+                self.display.fill("#50b032") # grass green
+
+                self.level.draw() # pass player for movement and collision
+            else:
+                current_view.draw()
             
             pygame.display.update()
             self.clock.tick(screenvariable.FPS)

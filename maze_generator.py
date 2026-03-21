@@ -118,14 +118,15 @@ class Maze():
              
     def redraw_paths(self, target_screen=None):
         draw_surface = target_screen if target_screen is not None else self.screen
+        print (f'paths are drawn')
         for row, col in self.path:
             self.draw_cell(row, col, self.color, target_screen=draw_surface)
-            
+        
 
     def open_entrance_and_exit(self, color, target_screen = None):
         draw_surface = target_screen if target_screen is not None else self.screen
         pygame.draw.line(draw_surface, BLACK, (screenvariable.OFFSET_X, screenvariable.OFFSET_Y), (screenvariable.OFFSET_X + screenvariable.CELL_SIZE, screenvariable.OFFSET_Y), 5)
-        exit_x = screenvariable.OFFSET_X + (screenvariable.GRID_SIZE - 1) * screenvariable.CELL_SIZE
+        exit_x = screenvariable.OFFSET_X+ (screenvariable.GRID_SIZE - 1) * screenvariable.CELL_SIZE
         exit_y = screenvariable.OFFSET_Y + (screenvariable.GRID_SIZE) * screenvariable.CELL_SIZE
         pygame.draw.line(draw_surface, BLACK, (exit_x, exit_y), (exit_x + screenvariable.CELL_SIZE, exit_y), 5)
         self.draw_cell(0, 0, color) # row 0, col 0
