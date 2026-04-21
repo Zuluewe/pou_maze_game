@@ -16,6 +16,12 @@ class Level:
         self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
+        
+        # Timer variables
+        self.time_left = 10  # Initial time in seconds
+        self.time_bonuses = []  # List to hold active time bonus objects
+        self.score = 0  # Player score
+        self.game_over = False  # Game over flag
 
     #(r,c) coordinates for the player position
         self.player_row = 0
@@ -39,6 +45,15 @@ class Level:
         self.draw() # draw the initial state of the level      
 
     def update(self, dt):
+        if self.game_over:
+            return  # Don't update if game is over
+        
+        # Decrease time
+        self.time_left -= dt
+        if self.time_left <= 0:
+            self.time_left = 0
+            self.game_over = True
+        
         self.move_timer += dt
 
         keys = pygame.key.get_pressed()
@@ -46,7 +61,6 @@ class Level:
 
         current_cell = (self.player_row, self.player_col)
         connections = self.maze.grid_connections.get(current_cell, set())
-
 
         if self.move_timer >= self.move_cooldown:
             if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and 'right' in connections:
@@ -74,26 +88,68 @@ class Level:
                         screenvariable.MAZE_START_Y + new_r * self.maze.cell_size + half - self.player_sprite.get_height() // 2 
                     )
                 self.move_timer = 0.0  # reset timer after move
+        
+        # Check collisions with time bonuses
+        player_rect = self.player_sprite.get_rect(topleft=self.player_position)
+        for bonus in self.time_bonuses[:]:
+            bonus.check_collision(player_rect)
+            if not bonus.active:
+                self.time_bonuses.remove(bonus)
+                self.time_left += 5  # Add 5 seconds when collecting bonus
 
     def draw(self, model=None):  
         self.display.fill("#50b032") # grass green
         self.display.blit(self.maze_surface, (screenvariable.MAZE_START_X, screenvariable.MAZE_START_Y)) # blit the pre-drawn maze surface onto the main display
         font = pygame.font.Font("assets/PouFont.ttf", 32)
         self.maze.redraw_paths() # redraw the maze paths on top of the maze surface, so they are visible above the walls # redraw entrance and exit to make sure they are visible above the paths
+        
+        # Draw time bonuses
+        for bonus in self.time_bonuses:
+            bonus.draw(self.display)
+        
+        # Draw player
         self.display.blit(self.player_sprite, self.player_position)
 
         # define text
-        score_text = font.render(f"Score: 0", True, "white")
-        time_text = font.render(f"Time: 0", True, "white")
-
+        score_text = font.render(f"Score: {self.score}", True, "white")
+        time_text = font.render(f"Time: {int(self.time_left)}", True, "white")
 
         # render text
         self.display.blit(score_text, (10, 10))
         self.display.blit(time_text, (screenvariable.SCREENWIDTH - time_text.get_width() - 10, 10))
+        
+        # Game over screen NEEDS TO BE REMOVED
+        if self.game_over:
+            game_over_font = pygame.font.Font("assets/PouFont.ttf", 64)
+            game_over_text = game_over_font.render("GAME OVER", True, "red")
+            restart_font = pygame.font.Font("assets/PouFont.ttf", 32)
+            restart_text = restart_font.render("Press R to Restart", True, "white")
+            self.display.blit(game_over_text, ((screenvariable.SCREENWIDTH - game_over_text.get_width()) // 2, (screenvariable.SCREENHEIGHT - game_over_text.get_height()) // 2))
+            self.display.blit(restart_text, ((screenvariable.SCREENWIDTH - restart_text.get_width()) // 2, (screenvariable.SCREENHEIGHT + 100) // 2))
+            
+            # Check for restart
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_r]:
+                self.reset_level()
 
         pygame.display.flip() # update the display after drawing everything
-        dt = self.clock.tick(screenvariable.FPS) / 800.0
-        self.update(dt)    
+        dt = self.clock.tick(screenvariable.FPS) / 1000.0
+        self.update(dt)
+    
+    def reset_level(self):
+        """Reset the level to initial state"""
+        self.time_left = 60
+        self.score = 0
+        self.game_over = False
+        self.player_row = 0
+        self.player_col = 0
+        self.move_timer = 0.0
+        
+        half = self.maze.cell_size // 2
+        self.player_position = (
+            screenvariable.MAZE_START_X + self.player_col * self.maze.cell_size + half - self.player_sprite.get_width() // 2,
+            screenvariable.MAZE_START_Y + self.player_row * self.maze.cell_size + half - self.player_sprite.get_height() // 2
+        )    
 
 if __name__ == "__main__":
     # Dummy objects for testing
