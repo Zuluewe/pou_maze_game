@@ -10,7 +10,7 @@ class Pause:
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
 
-    def draw(self, model):
+    def draw(self, model = None):
         self.display.fill("#954d25") # pou dirt
 
         # font

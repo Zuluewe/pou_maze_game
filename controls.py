@@ -78,12 +78,10 @@ class Game:
                 pygame.event.clear() # clear the event queue to prevent the key press from affecting the level
                 self.gameStateManager.set_states("Level")
         
-        elif current_state == "Level":  # if you press escape on level you pause
-            if keys[pygame.K_ESCAPE]:
-                self.gameStateManager.set_states("Pause")
+        elif current_state == "Level" and keys[pygame.K_ESCAPE]:  # if you press escape on level you pause
+            self.gameStateManager.set_states("Pause")
         
-        elif current_state == "Pause":
-            if keys[pygame.K_ESCAPE]: # if you press escape you go back to the game
+        elif current_state == "Pause" and event.type == pygame.KEYDOWN: # if you press any key you go back to the game
                 self.gameStateManager.set_states("Level")
 
         elif current_state == "GameOver":

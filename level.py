@@ -3,9 +3,11 @@
 import pygame
 #from maze_generator import Maze
 #from views.maze_generator import Maze
+
 import maze_generator
 import screenvariable
-
+import time_bonus
+import food
 
 class Level:
     def __init__(self, display, gameStateManager, font, player_sprite, clock):
@@ -14,15 +16,18 @@ class Level:
         self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
+
     #(r,c) coordinates for the player position
         self.player_row = 0
         self.player_col = 0
         self.maze_surface = pygame.Surface((screenvariable.MAZE_WIDTH, screenvariable.MAZE_WIDTH)) # surface to draw the maze on, so we can blit it to the main display and not have to redraw the maze every frame
+    
     # generate the maze once during initialization
         self.maze = maze_generator.Maze(self.maze_surface, screenvariable.GRID_SIZE, screenvariable.CELL_SIZE, screenvariable.OFFSET_X, screenvariable.OFFSET_Y,("#3f5837"))
         self.maze.generate(0,0, self.maze_surface) # generate the maze and draw it directly on the display
         self.move_cooldown = 0.05 #seconds between moves (0,20 = 5 moves/sec)
         self.move_timer = 0.0
+    
     #player start
         half = self.maze.cell_size // 2
         self.player_position = (
@@ -32,8 +37,6 @@ class Level:
         ) # 50 + (0 * 50) + 25 - half of the player sprite = 75, same for y. This centers the player sprite in the cell 
         
         self.draw() # draw the initial state of the level      
-
-    
 
     def update(self, dt):
         self.move_timer += dt
@@ -81,10 +84,15 @@ class Level:
 
         # define text
         score_text = font.render(f"Score: 0", True, "white")
+        time_text = font.render(f"Time: 0", True, "white")
+
+
         # render text
         self.display.blit(score_text, (10, 10))
+        self.display.blit(time_text, (screenvariable.SCREENWIDTH - time_text.get_width() - 10, 10))
+
         pygame.display.flip() # update the display after drawing everything
-        dt = self.clock.tick(60) / 800.0
+        dt = self.clock.tick(screenvariable.FPS) / 800.0
         self.update(dt)    
 
 if __name__ == "__main__":
@@ -112,26 +120,5 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 running = False
         
-        clock.tick(60)
+        clock.tick(screenvariable.FPS)
     pygame.quit()
-
-
-"""class Level:
-    def __init__(self, display, gameStateManager, font):
-        self.display = display
-        self.gameState = gameStateManager
-        self.font = font
-
-    def run(self):
-        self.display.fill("#50b032") # grass green
-
-    # Event handler
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-            key_press = pygame.key.get_pressed()
-            if key_press[pygame.K_ESCAPE]:
-                self.gameState.set_states("Pause")
-"""

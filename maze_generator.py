@@ -118,7 +118,7 @@ class Maze():
              
     def redraw_paths(self, target_screen=None):
         draw_surface = target_screen if target_screen is not None else self.screen
-        print (f'paths are drawn')
+        # print (f'paths are drawn')
         for row, col in self.path:
             self.draw_cell(row, col, self.color, target_screen=draw_surface)
         
