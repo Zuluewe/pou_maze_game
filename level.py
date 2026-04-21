@@ -18,7 +18,7 @@ class Level:
         self.player_sprite = player_sprite
         
         # Timer variables
-        self.time_left = 10  # Initial time in seconds
+        self.time_left = 10  # Initial time in seconds HSOULD BE 60
         self.time_bonuses = []  # List to hold active time bonus objects
         self.score = 0  # Player score
         self.game_over = False  # Game over flag
@@ -34,7 +34,7 @@ class Level:
         self.move_cooldown = 0.05 #seconds between moves (0,20 = 5 moves/sec)
         self.move_timer = 0.0
     
-    #player start
+    # player start
         half = self.maze.cell_size // 2
         self.player_position = (
             screenvariable.MAZE_START_X + self.player_col * self.maze.cell_size + half - self.player_sprite.get_width() // 2,
@@ -45,14 +45,16 @@ class Level:
         self.draw() # draw the initial state of the level      
 
     def update(self, dt):
-        if self.game_over:
-            return  # Don't update if game is over
-        
         # Decrease time
         self.time_left -= dt
         if self.time_left <= 0:
             self.time_left = 0
             self.game_over = True
+            self.gameState.set_states("GameOver")  # Set game state to GameOver
+            return  # Don't update if game is over
+        
+        if self.game_over:
+            return  # Don't update if game is over
         
         self.move_timer += dt
 
@@ -117,23 +119,9 @@ class Level:
         # render text
         self.display.blit(score_text, (10, 10))
         self.display.blit(time_text, (screenvariable.SCREENWIDTH - time_text.get_width() - 10, 10))
-        
-        # Game over screen NEEDS TO BE REMOVED
-        if self.game_over:
-            game_over_font = pygame.font.Font("assets/PouFont.ttf", 64)
-            game_over_text = game_over_font.render("GAME OVER", True, "red")
-            restart_font = pygame.font.Font("assets/PouFont.ttf", 32)
-            restart_text = restart_font.render("Press R to Restart", True, "white")
-            self.display.blit(game_over_text, ((screenvariable.SCREENWIDTH - game_over_text.get_width()) // 2, (screenvariable.SCREENHEIGHT - game_over_text.get_height()) // 2))
-            self.display.blit(restart_text, ((screenvariable.SCREENWIDTH - restart_text.get_width()) // 2, (screenvariable.SCREENHEIGHT + 100) // 2))
-            
-            # Check for restart
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_r]:
-                self.reset_level()
 
         pygame.display.flip() # update the display after drawing everything
-        dt = self.clock.tick(screenvariable.FPS) / 1000.0
+        dt = self.clock.tick(screenvariable.FPS) / 800.0
         self.update(dt)
     
     def reset_level(self):
