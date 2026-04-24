@@ -22,6 +22,14 @@ class Level:
         self.increase = increase # amount to increase the maze size by, this will make the paths wider and easier to navigate
         self.score = init_score
         #(r,c) coordinates for the player position
+        
+        # Timer variables
+        self.time_left = 10  # Initial time in seconds HSOULD BE 60
+        self.time_bonuses = []  # List to hold active time bonus objects
+        self.score = 0  # Player score
+        self.game_over = False  # Game over flag
+
+    #(r,c) coordinates for the player position
         self.player_row = 0
         self.player_col = 0
         self.maze_surface = pygame.Surface((screenvariable.MAZE_WIDTH , screenvariable.MAZE_WIDTH)) # surface to draw the maze on, so we can blit it to the main display and not have to redraw the maze every frame
@@ -33,6 +41,8 @@ class Level:
         self.move_timer = 0.0
 
     #player start
+    
+    # player start
         half = self.maze.cell_size // 2
         self.player_position = (
             screenvariable.MAZE_START_X + self.player_col * self.maze.cell_size + half - self.player_sprite.get_width() // 2,
@@ -43,6 +53,17 @@ class Level:
         self.draw() # draw the initial state of the level      
 
     def update(self, dt):
+        # Decrease time
+        self.time_left -= dt
+        if self.time_left <= 0:
+            self.time_left = 0
+            self.game_over = True
+            self.gameState.set_states("GameOver")  # Set game state to GameOver
+            return  # Don't update if game is over
+        
+        if self.game_over:
+            return  # Don't update if game is over
+        
         self.move_timer += dt
 
         keys = pygame.key.get_pressed()
@@ -50,7 +71,6 @@ class Level:
 
         current_cell = (self.player_row, self.player_col)
         connections = self.maze.grid_connections.get(current_cell, set())
-
 
         if self.move_timer >= self.move_cooldown:
             if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and 'right' in connections:
@@ -78,6 +98,15 @@ class Level:
                         screenvariable.MAZE_START_Y + new_r * self.maze.cell_size + half - self.player_sprite.get_height() // 2 
                     )
                 self.move_timer = 0.0  # reset timer after move
+        
+        # Check collisions with time bonuses
+        player_rect = self.player_sprite.get_rect(topleft=self.player_position)
+        for bonus in self.time_bonuses[:]:
+            bonus.check_collision(player_rect)
+            if not bonus.active:
+                self.time_bonuses.remove(bonus)
+                self.time_left += 5  # Add 5 seconds when collecting bonus
+
     def check_collision(self, player_position, food_position):
         # Use a larger threshold (cell_size) for reliable collision detection
         collision_threshold = self.maze.cell_size // 2
@@ -94,11 +123,21 @@ class Level:
         self.display.blit(self.exit_sprite, (screenvariable.MAZE_START_X - (self.maze.cell_size), screenvariable.MAZE_START_Y )) # draw exit on top of paths to make sure it's visible
         self.display.blit(self.exit_sprite, (screenvariable.MAZE_START_X + (self.maze.grid_size) * self.maze.cell_size, screenvariable.MAZE_START_Y + (self.maze.grid_size - 1) * self.maze.cell_size)) # draw exit on top of paths to make sure it's visible
         self.display.blit(self.food_sprite, (self.food_position)) # draw food on top of paths to make sure it's visible
+        
+        # Draw time bonuses
+        for bonus in self.time_bonuses:
+            bonus.draw(self.display)
+        
+        # Draw player
         self.display.blit(self.player_sprite, self.player_position)
         self.check_collision(self.player_position, self.food_position)
         score_text = font.render(f"Score: {self.score}", True, "white")
         time_text = font.render(f"Time: 0", True, "white")
 
+
+        # define text
+        score_text = font.render(f"Score: {self.score}", True, "white")
+        time_text = font.render(f"Time: {int(self.time_left)}", True, "white")
 
         # render text
         self.display.blit(score_text, (10, 10))
@@ -106,7 +145,22 @@ class Level:
 
         pygame.display.flip() # update the display after drawing everything
         dt = self.clock.tick(screenvariable.FPS) / 800.0
-        self.update(dt)    
+        self.update(dt)
+    
+    def reset_level(self):
+        """Reset the level to initial state"""
+        self.time_left = 60
+        self.score = 0
+        self.game_over = False
+        self.player_row = 0
+        self.player_col = 0
+        self.move_timer = 0.0
+        
+        half = self.maze.cell_size // 2
+        self.player_position = (
+            screenvariable.MAZE_START_X + self.player_col * self.maze.cell_size + half - self.player_sprite.get_width() // 2,
+            screenvariable.MAZE_START_Y + self.player_row * self.maze.cell_size + half - self.player_sprite.get_height() // 2
+        )    
 
 if __name__ == "__main__":
     # Dummy objects for testing

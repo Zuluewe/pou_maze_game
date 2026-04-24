@@ -66,7 +66,7 @@ class Game:
 
                 self.level.draw() # pass player for movement and collision
             else:
-                current_view.draw()
+                current_view.draw(model = None)
             
             pygame.display.update()
             self.clock.tick(screenvariable.FPS)
@@ -90,12 +90,14 @@ class Game:
 
         elif current_state == "GameOver":
             if keys[pygame.K_r]: # if you click "r" you restart the level
+                self.level.reset_level()  # Reset level state
                 self.gameStateManager.set_states("Level")
 
 class GameState:
     def __init__(self):
-        self.score = 0
-        self.time_left = 10 # should be 60 seconds
+        if Level.self.time_left <= 0:
+            self.gameStateManager.set_states("GameOver")
+
         self.game_over = False
 
 class GameStateManager:
@@ -104,7 +106,6 @@ class GameStateManager:
 
     def get_states(self):
         return self.currentState
-    
     def set_states(self, state):
         self.currentState = state
 
