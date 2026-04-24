@@ -26,7 +26,6 @@ class Level:
         # Timer variables
         self.time_left = 10  # Initial time in seconds HSOULD BE 60
         self.time_bonuses = []  # List to hold active time bonus objects
-        self.score = 0  # Player score
         self.game_over = False  # Game over flag
 
     #(r,c) coordinates for the player position
@@ -40,8 +39,6 @@ class Level:
         self.move_cooldown = 0.05 #seconds between moves (0,20 = 5 moves/sec)
         self.move_timer = 0.0
 
-    #player start
-    
     # player start
         half = self.maze.cell_size // 2
         self.player_position = (
@@ -124,16 +121,13 @@ class Level:
         self.display.blit(self.exit_sprite, (screenvariable.MAZE_START_X + (self.maze.grid_size) * self.maze.cell_size, screenvariable.MAZE_START_Y + (self.maze.grid_size - 1) * self.maze.cell_size)) # draw exit on top of paths to make sure it's visible
         self.display.blit(self.food_sprite, (self.food_position)) # draw food on top of paths to make sure it's visible
         
-        # Draw time bonuses
-        for bonus in self.time_bonuses:
-            bonus.draw(self.display)
-        
+    
         # Draw player
         self.display.blit(self.player_sprite, self.player_position)
         self.check_collision(self.player_position, self.food_position)
-        score_text = font.render(f"Score: {self.score}", True, "white")
-        time_text = font.render(f"Time: 0", True, "white")
-
+        # Draw time bonuses
+        for bonus in self.time_bonuses:
+            bonus.draw(self.display) 
 
         # define text
         score_text = font.render(f"Score: {self.score}", True, "white")
