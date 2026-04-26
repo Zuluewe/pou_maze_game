@@ -31,6 +31,9 @@ class Game:
         not_sized_exit = pygame.image.load("assets/images/exit.jpg").convert_alpha()
         self.exit = pygame.transform.smoothscale(not_sized_exit, (screenvariable.CELL_SIZE + 5, screenvariable.CELL_SIZE + 5)) 
         self.food = pygame.image.load("assets/images/Burger.webp").convert_alpha()
+        time_bonus_sprite_notScaled = pygame.image.load("assets/images/time.png").convert_alpha()
+        time_bonus_sprite = pygame.transform.smoothscale(time_bonus_sprite_notScaled, (screenvariable.CELL_SIZE - 30, screenvariable.CELL_SIZE - 30))
+    
 
         self.player = player.Player((screenvariable.SCREENWIDTH // 2, screenvariable.SCREENHEIGHT // 2), player_sprite)
 
@@ -39,7 +42,7 @@ class Game:
         
         # Create views and pass player sprite
         self.start = Start.Start(self.display, self.gameStateManager, self.font, self.player.sprite)
-        self.level = Level.Level(self.display, self.gameStateManager, self.font, self.player.sprite, self.clock, self.exit, self.food, 0, 0) # pass player sprite for movement and collision, also pass clock for timing and exit and food sprites for drawing
+        self.level = Level.Level(self.display, self.gameStateManager, self.font, self.player.sprite, self.clock, self.exit, self.food, 0, 0, 60, time_bonus_sprite) # pass player sprite for movement and collision, also pass clock for timing and exit and food sprites for drawing
         self.pause = Pause.Pause(self.display, self.gameStateManager, self.font, self.player.sprite)
         self.game_over = End.GameOver(self.display, self.gameStateManager, self.font, self.player.sprite)
 
