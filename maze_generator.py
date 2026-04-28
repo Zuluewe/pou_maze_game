@@ -125,10 +125,10 @@ class Maze():
 
     def open_entrance_and_exit(self, color, target_screen = None):
         draw_surface = target_screen if target_screen is not None else self.screen
-        pygame.draw.line(draw_surface, BLACK, (screenvariable.OFFSET_X, screenvariable.OFFSET_Y), (screenvariable.OFFSET_X + screenvariable.cell_size, screenvariable.OFFSET_Y), 5)
-        exit_x = screenvariable.OFFSET_X+ (screenvariable.grid_size - 1) * screenvariable.cell_size
-        exit_y = screenvariable.OFFSET_Y + (screenvariable.grid_size) * screenvariable.cell_size
-        pygame.draw.line(draw_surface, BLACK, (exit_x, exit_y), (exit_x + screenvariable.cell_size, exit_y), 5)
+        pygame.draw.line(draw_surface, BLACK, (screenvariable.OFFSET_X, screenvariable.OFFSET_Y), (screenvariable.OFFSET_X + self.cell_size, screenvariable.OFFSET_Y), 5)
+        exit_x = screenvariable.OFFSET_X+ (self.grid_size - 1) * self.cell_size
+        exit_y = screenvariable.OFFSET_Y + (self.grid_size) * self.cell_size
+        pygame.draw.line(draw_surface, BLACK, (exit_x, exit_y), (exit_x + self.cell_size, exit_y), 5)
         self.draw_cell(0, 0, color) # row 0, col 0
         #self.draw_cell(GRID_SIZE-1, GRID_SIZE - 1, GREEN)
         
@@ -146,8 +146,10 @@ if __name__ == "__main__":
     screen.fill("#50b032") # pou grass green
     pygame.display.set_caption("Maze Generator")
     clock = pygame.time.Clock()
+    grid_size = 10
+    cell_size = screenvariable.MAZE_WIDTH // grid_size
 
-    maze = Maze(screen, screenvariable.grid_size, screenvariable.cell_size, screenvariable.OFFSET_X, screenvariable.OFFSET_Y,("#434d3f"))
+    maze = Maze(screen, grid_size, cell_size, screenvariable.OFFSET_X, screenvariable.OFFSET_Y,("#434d3f"))
     
     maze.generate(0, 0)
 
