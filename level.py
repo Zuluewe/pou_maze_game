@@ -6,6 +6,12 @@ import maze_generator
 import screenvariable
 from maze_generator import Maze 
 
+# we load the sprites here to pass them to the level class, so we don't have to load them every time we reset the level, which would cause performance issues. We also convert_alpha() to optimize the images for faster blitting with transparency.
+player = pygame.image.load("assets/images/pou_happy.png") 
+food = pygame.image.load("assets/images/Burger.webp")
+exit = pygame.image.load("assets/images/exit.jpg")
+time_sprite = pygame.image.load("assets/images/time.png")
+
 class Level:
     def __init__(self, display, gameStateManager, font, player_sprite, clock, exit_sprite, food_sprite, current_level, init_score, init_time, time_bonus_sprite):
         self.level = current_level
@@ -137,7 +143,13 @@ class Level:
                     )
         self.food_position = ((screenvariable.MAZE_START_X + (self.maze.grid_size - 1) * self.maze.cell_size), (screenvariable.MAZE_START_Y + (self.maze.grid_size -1)*self.maze.cell_size))
         self.time_bonus_position = ((screenvariable.MAZE_START_X + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size)), (screenvariable.MAZE_START_Y + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size)))
-
+        self.random_number = random.randint(1, 100) # % probability for time bonus
+        if self.random_number < 50:
+            self.time_add = True  # Allow time bonus to be collected
+            self.time_sprite.set_alpha(255)  # Make the time bonus sprite visible for this round
+        else:
+            self.time_add = False  # No time bonus this round
+            self.time_sprite.set_alpha(0)  # Make the time bonus sprite invisible for this round
         #we resize the sprites        
         self.time_sprite = self.scale_sprite(self.time_sprite, self.cell_size, 0.6) # rescale time bonus sprite for the new cell size
         self.food_sprite = self.scale_sprite(self.food_sprite, self.cell_size, 0.8) # rescale food sprite for the new cell size
@@ -145,38 +157,9 @@ class Level:
         self.player_sprite = self.scale_sprite(self.player_sprite, self.cell_size, 0.8) # rescale player sprite for the new cell size
      
     def reset_level(self):
-        # Reset the current level to initial state without resetting score
-        self.game_over = False
-        self.time_left = 10  # reset time back to initial value
-        self.score = 0 # reset score
-        self.level = 0 # reset level
-        self.random_number = random.randint(1, 100) # % probability
-
-        if self.random_number < 50:
-            self.time_add = True  # Allow time bonus to be collected
-            self.time_sprite.set_alpha(255)  # Make the time bonus sprite visible for this round
-        else:
-            self.time_add = False  # No time bonus this round
-            self.time_sprite.set_alpha(0)  # Make the time bonus sprite invisible for this round
         
-        # Reset maze and positions
-        self.maze_surface = pygame.Surface((screenvariable.MAZE_WIDTH , screenvariable.MAZE_WIDTH))
-        self.maze = Maze(self.maze_surface, self.grid_size, self.cell_size, screenvariable.OFFSET_X, screenvariable.OFFSET_Y,("#3f5837"))
-        self.maze.generate(0,0, self.maze_surface)
-        
-        #(r,c) coordinates for the player position
-        self.player_row = 0
-        self.player_col = 0
+        self.__init__(self.display, self.gameState, self.font, player, self.clock, exit, food, 0, 0, 10, time_sprite) # reinitialize the level with the same level number to reset it
 
-        #reset positions
-        half = self.maze.cell_size // 2
-        self.player_position = (
-                        screenvariable.MAZE_START_X + self.player_col * self.maze.cell_size + half - self.player_sprite.get_width() // 2,
-                        screenvariable.MAZE_START_Y + self.player_row * self.maze.cell_size + half - self.player_sprite.get_height() // 2 
-                    )
-        self.food_position = ((screenvariable.MAZE_START_X + (self.maze.grid_size - 1) * self.maze.cell_size), (screenvariable.MAZE_START_Y + (self.maze.grid_size -1)*self.maze.cell_size))
-        self.time_bonus_position = ((screenvariable.MAZE_START_X + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size)), (screenvariable.MAZE_START_Y + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size)))
-     
     # COLLISION
     def check_collision(self, player_position, food_position, time_bonus_position):
         collision_threshold = self.maze.cell_size // 2
