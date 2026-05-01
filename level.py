@@ -75,9 +75,8 @@ class Level:
             self.time_left = 0
             self.game_over_sound.play()
             self.game_over = True
+            return self.score
 
-            return  # Don't update if game is over
-        
         self.move_timer += dt # used to control the speed of the player movement, so it doesn't move too fast and glitch when holding down a key
 
         # PLAYER INPUT
