@@ -46,7 +46,7 @@ class Game:
         self.start = Start.Start(self.display, self.gameStateManager, self.font, self.player.sprite)
         self.level = Level.Level(self.display, self.gameStateManager, self.font, self.player.sprite, self.clock, self.exit, self.food, 0, 0, 10, time_bonus_sprite) # pass player sprite for movement and collision, also pass clock for timing and exit and food sprites for drawing
         self.pause = Pause.Pause(self.display, self.gameStateManager, self.font, self.player.sprite)
-        self.game_over = End.GameOver(self.display, self.gameStateManager, self.font, self.player.sprite)
+        self.game_over = End.GameOver(self.display, self.gameStateManager, self.font, self.player.sprite, self.level)
 
         self.states = {
             "Start": self.start, 

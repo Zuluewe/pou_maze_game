@@ -19,9 +19,11 @@ class Level:
         self.exit_sprite = self.scale_sprite(exit_sprite, self.cell_size, 1)
         self.time_sprite = self.scale_sprite(time_bonus_sprite, self.cell_size, 0.6)
         self.score = init_score
+
         self.pou_eating = pygame.mixer.Sound("assets/sounds/eat.ogg")
         self.timer =pygame.mixer.Sound("assets/sounds/timer.ogg")
         self.game_over_sound = pygame.mixer.Sound("assets/sounds/game_over.mp3")
+
 
         # TIMER variables
         self.time_left = init_time
@@ -73,10 +75,9 @@ class Level:
         self.time_left -= dt
         if self.time_left <= 0:
             self.time_left = 0
-            final_score = self.score
             self.game_over_sound.play()
             self.game_over = True
-            return final_score
+            return 
 
         self.move_timer += dt # used to control the speed of the player movement, so it doesn't move too fast and glitch when holding down a key
 

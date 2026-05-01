@@ -2,12 +2,15 @@
 import pygame 
 import screenvariable
 
+import level
+
 class GameOver:
-    def __init__(self, display, font, gameStateManager, player_sprite = None):
+    def __init__(self, display, font, gameStateManager, player_sprite = None, level = None):
         self.display = display
         self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
+        self.level = level
 
     def draw(self, model):
         self.display.fill("#3690df") # dark grass
@@ -21,7 +24,7 @@ class GameOver:
         
         game_over_text = game_over_font.render("Game Over", True, "white")
         pou_died_text = font.render("Pou starved to death", True, "red")
-        score_text = font.render(f"Score:", True, "white")
+        score_text = font.render(f"Score: {self.level.score}", True, "white")
         restart_game_text = font.render("Press 'r' to restart game", True, "white")
 
         # get size
