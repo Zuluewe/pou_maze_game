@@ -93,9 +93,12 @@ class Game:
                 self.gameStateManager.set_states("Level")
         
         elif current_state == "Level" and keys[pygame.K_ESCAPE]:  # if you press escape on level you pause
+            pygame.mixer.music.stop()
             self.gameStateManager.set_states("Pause")
         
         elif current_state == "Pause" and event.type == pygame.KEYDOWN: # if you press any key you go back to the game
+                pygame.mixer.music.play(-1, 0.0)
+                pygame.mixer.music.set_volume(0.1)
                 self.gameStateManager.set_states("Level")
 
         elif current_state == "GameOver":
