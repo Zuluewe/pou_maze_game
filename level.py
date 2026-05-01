@@ -73,9 +73,10 @@ class Level:
         self.time_left -= dt
         if self.time_left <= 0:
             self.time_left = 0
+            final_score = self.score
             self.game_over_sound.play()
             self.game_over = True
-            return self.score
+            return final_score
 
         self.move_timer += dt # used to control the speed of the player movement, so it doesn't move too fast and glitch when holding down a key
 
