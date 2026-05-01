@@ -1,4 +1,3 @@
-# controller 
 # takes input from player, manages colission and level progression
 
 import pygame
@@ -12,6 +11,7 @@ import game_over as End
 import level as Level
 
 # import models
+import player
 
 class Game:
     def __init__(self):
@@ -39,10 +39,12 @@ class Game:
         background_music = pygame.mixer.music.load("assets/sounds/background_music.ogg")
         pygame.mixer.music.play(-1, 0.0) # -1 means the music loops forever and the next varible is where the song starts
         pygame.mixer.music.set_volume(0.1)
+
+        game_over_sound = pygame.mixer.Sound("assets/sounds/game_over.mp3")
         
         # Create views and pass player sprite
         self.start = Start.Start(self.display, self.gameStateManager, self.font, self.player.sprite)
-        self.level = Level.Level(self.display, self.gameStateManager, self.font, self.player.sprite, self.clock, self.exit, self.food, 0, 0, 60, time_bonus_sprite) # pass player sprite for movement and collision, also pass clock for timing and exit and food sprites for drawing
+        self.level = Level.Level(self.display, self.gameStateManager, self.font, self.player.sprite, self.clock, self.exit, self.food, 0, 0, 10, time_bonus_sprite) # pass player sprite for movement and collision, also pass clock for timing and exit and food sprites for drawing
         self.pause = Pause.Pause(self.display, self.gameStateManager, self.font, self.player.sprite)
         self.game_over = End.GameOver(self.display, self.gameStateManager, self.font, self.player.sprite)
 
@@ -62,11 +64,14 @@ class Game:
 
                 self.handle_input(event) # lets you manage game state with input
             
+            # Check if game is over in level
+            if self.gameStateManager.get_states() == "Level" and self.level.game_over:
+                self.gameStateManager.set_states("GameOver")
+            
             # draw current view
             current_view = self.states[self.gameStateManager.get_states()]
             if current_view == self.level: # 
                 self.display.fill("#50b032") # grass green
-
                 self.level.draw() # pass player for movement and collision
             else:
                 current_view.draw(model = None)
@@ -95,16 +100,6 @@ class Game:
             if keys[pygame.K_r]: # if you click "r" you restart the level
                 self.level.reset_level()  # Reset level state
                 self.gameStateManager.set_states("Level")
-
-class GameState:
-    def __init__(self):
-
-        if Level.self.time_left <= 0:
-            self.gameStateManager.set_states("GameOver")
-            pygame.mixer.music.stop()
-
-
-        self.game_over = False
 
 class GameStateManager:
     def __init__(self, currentState):

@@ -1,7 +1,6 @@
 # model
 
 import pygame
-import food as food
 import screenvariable
 
 class Player:
@@ -12,9 +11,6 @@ class Player:
 
     def draw(self, screen):
         screen.blit(self.sprite, self.rect)
-
-    def check_collision(self, food): # collision with food
-        self.sprite = pygame.image.load("assets/images/pou_happy.png") # change from hungry to happy
 
 
 """player_position = pygame.Vector2(screenvariable.SCREENWIDTH() / 2, screenvariable.SCREENHEIGHT() / 2) # position in middle
