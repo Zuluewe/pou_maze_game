@@ -12,9 +12,6 @@ import game_over as End
 import level as Level
 
 # import models
-import food as Food
-import time_bonus as timer
-import player
 
 class Game:
     def __init__(self):
@@ -28,17 +25,20 @@ class Game:
         
         # Create player
         player_sprite = pygame.image.load("assets/images/pou_hungry.png").convert_alpha()
-        not_sized_exit = pygame.image.load("assets/images/exit.jpg").convert_alpha()
-        self.exit = pygame.transform.smoothscale(not_sized_exit, (screenvariable.CELL_SIZE + 5, screenvariable.CELL_SIZE + 5)) 
+        self.exit = pygame.image.load("assets/images/exit.jpg").convert_alpha()
         self.food = pygame.image.load("assets/images/Burger.webp").convert_alpha()
-        time_bonus_sprite_notScaled = pygame.image.load("assets/images/time.png").convert_alpha()
-        time_bonus_sprite = pygame.transform.smoothscale(time_bonus_sprite_notScaled, (screenvariable.CELL_SIZE - 30, screenvariable.CELL_SIZE - 30))
+        time_bonus_sprite = pygame.image.load("assets/images/time.png").convert_alpha()
     
 
         self.player = player.Player((screenvariable.SCREENWIDTH // 2, screenvariable.SCREENHEIGHT // 2), player_sprite)
 
         # font
         self.font = pygame.font.Font("assets/PouFont.ttf", 32)
+
+        # music
+        background_music = pygame.mixer.music.load("assets/sounds/background_music.ogg")
+        pygame.mixer.music.play(-1, 0.0) # -1 means the music loops forever and the next varible is where the song starts
+        pygame.mixer.music.set_volume(0.1)
         
         # Create views and pass player sprite
         self.start = Start.Start(self.display, self.gameStateManager, self.font, self.player.sprite)
@@ -98,8 +98,11 @@ class Game:
 
 class GameState:
     def __init__(self):
+
         if Level.self.time_left <= 0:
             self.gameStateManager.set_states("GameOver")
+            pygame.mixer.music.stop()
+
 
         self.game_over = False
 

@@ -4,11 +4,7 @@ import pygame
 import random
 import maze_generator
 import screenvariable
-import time_bonus
-import food
 from maze_generator import Maze 
-
-
 
 class Level:
     def __init__(self, display, gameStateManager, font, player_sprite, clock, exit_sprite, food_sprite, current_level, init_score, init_time, time_bonus_sprite):
@@ -23,7 +19,9 @@ class Level:
         self.exit_sprite = self.scale_sprite(exit_sprite, self.cell_size, 1)
         self.time_sprite = self.scale_sprite(time_bonus_sprite, self.cell_size, 0.6)
         self.score = init_score
-        # Timer variables
+        self.sound = pygame.mixer.Sound("assets/sounds/eat.ogg")
+
+        # TIMER variables
         self.time_left = init_time
         self.time_add = True
         self.game_over = False  # Game over flag
@@ -37,30 +35,26 @@ class Level:
             
         self.maze_surface = pygame.Surface((screenvariable.MAZE_WIDTH , screenvariable.MAZE_WIDTH)) # surface to draw the maze on, so we can blit it to the main display and not have to redraw the maze every frame
         
-    # generate the maze once during initialization
+        # GENERATE THE MAZE
         self.maze = Maze(self.maze_surface, (self.grid_size), (self.cell_size), screenvariable.OFFSET_X, screenvariable.OFFSET_Y,("#3f5837"))
         self.maze.generate(0,0, self.maze_surface) # generate the maze and draw it directly on the display
         self.move_cooldown = 0.05 #seconds between moves (0,20 = 5 moves/sec)
         self.move_timer = 0.0
 
-    # player start
-    #(r,c) coordinates for the player position
+    # PLAYER start (r,c) coordinates for the player position
         self.player_row = 0
         self.player_col = 0
         half = self.maze.cell_size // 2
         self.player_position = (
             screenvariable.MAZE_START_X + self.player_col * self.maze.cell_size + half - self.player_sprite.get_width() // 2,
-            screenvariable.MAZE_START_Y + self.player_row * self.maze.cell_size + half - self.player_sprite.get_height() // 2
-        
-        ) # 50 + (0 * 50) + 25 - half of the player sprite = 75, same for y. This centers the player sprite in the cell 
+            screenvariable.MAZE_START_Y + self.player_row * self.maze.cell_size + half - self.player_sprite.get_height() // 2) # 50 + (0 * 50) + 25 - half of the player sprite = 75, same for y. This centers the player sprite in the cell 
         self.food_position = ((screenvariable.MAZE_START_X + (self.maze.grid_size - 1) * self.maze.cell_size), (screenvariable.MAZE_START_Y + (self.maze.grid_size -1)*self.maze.cell_size))
         self.time_bonus_position = ((screenvariable.MAZE_START_X + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size)), (screenvariable.MAZE_START_Y + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size)))
-        self.draw() # draw the initial state of the level      
+        self.draw()  
     
     def scale_sprite(self, sprite, cell_size, proportion):
         size = int(cell_size * proportion)
         return pygame.transform.smoothscale(sprite, (size, size))
-        
 
     def get_level_config(self, level):
         grid_size = min(5 + level, 25) # increase grid size for each level, but cap it at 25 to prevent performance issues)
@@ -144,27 +138,27 @@ class Level:
         self.exit_sprite = self.scale_sprite(self.exit_sprite, self.cell_size, 1) # rescale exit sprite for the new cell size
         self.player_sprite = self.scale_sprite(self.player_sprite, self.cell_size, 0.8) # rescale player sprite for the new cell size
      
-        
-        
-
+    # COLLISION
     def check_collision(self, player_position, food_position, time_bonus_position):
-        # Use a larger threshold (cell_size) for reliable collision detection
         collision_threshold = self.maze.cell_size // 2
-        if abs(player_position[0] - food_position[0]) < collision_threshold and abs(player_position[1] - food_position[1]) < collision_threshold:
-            # Increment score and reset level properly
-            new_score = self.score + 1
-            self.score = new_score
-            self.next_level()  # Move to the next level after collecting food
 
+        # FOOD
+        if abs(player_position[0] - food_position[0]) < collision_threshold and abs(player_position[1] - food_position[1]) < collision_threshold:
+            new_score = self.score + 1  # increase score and reset level properly
+            self.score = new_score
+            self.next_level()   # Move to the next level after collecting food
+            self.sound.play()
+
+        # TIME BONUS
         if abs(player_position[0]- time_bonus_position[0]) < collision_threshold and abs(player_position[1] - time_bonus_position[1]) < collision_threshold:
             if self.time_add == True: 
                 self.time_left += 5 # Ensure time bonus is only collected once per bonus
                 self.time_add = False  # Ensure time bonus is only collected once
                 self.time_sprite.set_alpha(0)  # Make the time bonus sprite invisible after collection
+
+
             else:
                 self.time_left = self.time_left  # No change if already collected
-
-
 
     def draw(self, model=None):  
         self.display.fill("#50b032") # grass green
