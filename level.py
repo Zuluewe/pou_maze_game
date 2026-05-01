@@ -21,6 +21,7 @@ class Level:
         self.score = init_score
         self.pou_eating = pygame.mixer.Sound("assets/sounds/eat.ogg")
         self.timer =pygame.mixer.Sound("assets/sounds/timer.ogg")
+        self.game_over_sound = pygame.mixer.Sound("assets/sounds/game_over.mp3")
 
         # TIMER variables
         self.time_left = init_time
@@ -72,7 +73,9 @@ class Level:
         self.time_left -= dt
         if self.time_left <= 0:
             self.time_left = 0
+            self.game_over_sound.play()
             self.game_over = True
+
             return  # Don't update if game is over
         
         self.move_timer += dt # used to control the speed of the player movement, so it doesn't move too fast and glitch when holding down a key
@@ -144,6 +147,8 @@ class Level:
         # Reset the current level to initial state without resetting score
         self.game_over = False
         self.time_left = 10  # reset time back to initial value
+        self.score = 0 # reset score
+        self.level = 0 # reset level
         self.random_number = random.randint(1, 100) # % probability
 
         if self.random_number < 50:

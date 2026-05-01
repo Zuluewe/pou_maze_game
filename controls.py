@@ -66,6 +66,7 @@ class Game:
             
             # Check if game is over in level
             if self.gameStateManager.get_states() == "Level" and self.level.game_over:
+                pygame.mixer.music.stop()
                 self.gameStateManager.set_states("GameOver")
             
             # draw current view
@@ -81,6 +82,7 @@ class Game:
         
         pygame.quit()
     
+    # PLAYER INPUT
     def handle_input(self, event):
         keys = pygame.key.get_pressed() 
         current_state = self.gameStateManager.get_states()
@@ -100,6 +102,8 @@ class Game:
             if keys[pygame.K_r]: # if you click "r" you restart the level
                 self.level.reset_level()  # Reset level state
                 self.gameStateManager.set_states("Level")
+                pygame.mixer.music.play(-1, 0.0)
+                pygame.mixer.music.set_volume(0.1)
 
 class GameStateManager:
     def __init__(self, currentState):
