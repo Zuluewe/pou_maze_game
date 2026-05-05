@@ -218,6 +218,7 @@ if __name__ == "__main__":
     font = pygame.font.Font("assets/PouFont.ttf", 32) # dummy
     clock = pygame.time.Clock()
     running = True
+<<<<<<< Updated upstream
     dt = 0
 
     gameStateManager = 'Level' # dummy
@@ -225,6 +226,13 @@ if __name__ == "__main__":
     time_bonus_sprite = pygame.image.load("assets/images/time.png").convert_alpha() # Dummy
     resized_sprite= pygame.image.load("assets/images/pou_happy.png") # Dummy
     food = pygame.image.load("assets/images/Burger.webp").convert_alpha() # Dummy
+=======
+    gameStateManager = 'Level' # dummy for testing, should be passed from Game class
+    exit = pygame.image.load("assets/images/exit.jpg").convert_alpha()
+    time_bonus_sprite = pygame.image.load("assets/images/time.png").convert_alpha()
+    resized_sprite= pygame.image.load("assets/images/pou_happy.png")  
+    food = pygame.image.load("assets/images/Burger.webp").convert_alpha()
+>>>>>>> Stashed changes
 
     level = Level(display, None, font, resized_sprite, clock, exit, food, 0, 0, 10, time_bonus_sprite) # pass dummy sprite and clock for testing
 
