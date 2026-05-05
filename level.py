@@ -26,10 +26,10 @@ class Level:
         self.time_sprite = self.scale_sprite(time_bonus_sprite, self.cell_size, 0.6)
         self.score = init_score
 
+        # define sounds
         self.pou_eating = pygame.mixer.Sound("assets/sounds/eat.ogg")
-        self.timer =pygame.mixer.Sound("assets/sounds/timer.ogg")
+        self.timer = pygame.mixer.Sound("assets/sounds/timer.ogg")
         self.game_over_sound = pygame.mixer.Sound("assets/sounds/game_over.mp3")
-
 
         # TIMER variables
         self.time_left = init_time
@@ -37,33 +37,37 @@ class Level:
         self.game_over = False  # Game over flag
         self.random_number = random.randint(1, 100) # % probability
 
+        #50% chance for timer to apear on every level
         if self.random_number < 50:
             self.time_add = True  # Allow time bonus to be collected
             self.time_sprite.set_alpha(255)  # Make the time bonus sprite visible for this round
         else:
             self.time_add = False  # No time bonus this round
             self.time_sprite.set_alpha(0)  # Make the time bonus sprite invisible for this round
-            
-        self.maze_surface = pygame.Surface((screenvariable.MAZE_WIDTH , screenvariable.MAZE_WIDTH)) # surface to draw the maze on, so we can blit it to the main display and not have to redraw the maze every frame
+        
+        # surface to draw the maze on, so we can blit it to the main display and not have to redraw the maze every frame
+        self.maze_surface = pygame.Surface((screenvariable.MAZE_WIDTH , screenvariable.MAZE_WIDTH))
         
         # GENERATE THE MAZE
         self.maze = Maze(self.maze_surface, (self.grid_size), (self.cell_size), screenvariable.OFFSET_X, screenvariable.OFFSET_Y,("#3f5837"))
-        self.maze.generate(0,0, self.maze_surface) # generate the maze and draw it directly on the display
+        self.maze.generate(0,0, self.maze_surface) # generate the maze and draw it directly on the maze surface
         self.move_cooldown = 0.05 #seconds between moves (0,20 = 5 moves/sec)
         self.move_timer = 0.0
 
-    # PLAYER position (r,c)
+        # PLAYER position (r,c)
         self.player_row = 0
         self.player_col = 0
         half = self.maze.cell_size // 2
         self.player_position = (
             screenvariable.MAZE_START_X + self.player_col * self.maze.cell_size + half - self.player_sprite.get_width() // 2,
             screenvariable.MAZE_START_Y + self.player_row * self.maze.cell_size + half - self.player_sprite.get_height() // 2) # 50 + (0 * 50) + 25 - half of the player sprite = 75, same for y. This centers the player sprite in the cell 
+        
+        # food and timer position
         self.food_position = ((screenvariable.MAZE_START_X + (self.maze.grid_size - 1) * self.maze.cell_size), (screenvariable.MAZE_START_Y + (self.maze.grid_size -1)*self.maze.cell_size))
         self.time_bonus_position = ((screenvariable.MAZE_START_X + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size)), (screenvariable.MAZE_START_Y + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size)))
         self.draw()  
     
-    # changing the player sprite size
+    # scaling the player sprite size
     def scale_sprite(self, sprite, cell_size, proportion):
         size = int(cell_size * proportion)
         return pygame.transform.smoothscale(sprite, (size, size))
@@ -94,6 +98,7 @@ class Level:
         current_cell = (self.player_row, self.player_col)
         connections = self.maze.grid_connections.get(current_cell, set())
 
+        # WASD or arrow keys
         if self.move_timer >= self.move_cooldown:
             if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and 'right' in connections:
                 dx = 1
@@ -104,6 +109,7 @@ class Level:
             if (keys[pygame.K_UP] or keys[pygame.K_w]) and 'up' in connections:
                 dy = -1
             
+            # if position has changed, position gets redefined
             if dx != 0 or dy != 0:
                 new_r = self.player_row + dy
                 new_c = self.player_col + dx
@@ -121,12 +127,14 @@ class Level:
                     )
                 self.move_timer = 0.0  # reset timer after move
 
+    # function to go the next level
     def next_level(self):
         self.level += 1 # increase the maze size for the next level
         self.grid_size += 2
         self.cell_size = screenvariable.MAZE_WIDTH // self.grid_size
         self.generate_new_maze() # generate a new maze with the updated size
 
+    # function to CREATE next level maze
     def generate_new_maze(self):
         self.maze_surface = pygame.Surface((screenvariable.MAZE_WIDTH , screenvariable.MAZE_WIDTH)) # create a new surface for the new maze
         self.maze = Maze(self.maze_surface, self.grid_size, self.cell_size, screenvariable.OFFSET_X, screenvariable.OFFSET_Y,("#3f5837")) # create a new maze with the updated size
@@ -135,7 +143,7 @@ class Level:
         self.player_row = 0
         self.player_col = 0
 
-        #we reset the positions
+        # reset positions
         half = self.maze.cell_size // 2
         self.player_position = (
                         screenvariable.MAZE_START_X + self.player_col * self.maze.cell_size + half - self.player_sprite.get_width() // 2,
@@ -156,11 +164,12 @@ class Level:
         self.exit_sprite = self.scale_sprite(self.exit_sprite, self.cell_size, 1) # rescale exit sprite for the new cell size
         self.player_sprite = self.scale_sprite(self.player_sprite, self.cell_size, 0.8) # rescale player sprite for the new cell size
      
+    # called init to reinitialize level when resetting after game over 
     def reset_level(self):
         
         self.__init__(self.display, self.gameState, self.font, player, self.clock, exit, food, 0, 0, 10, time_sprite) # reinitialize the level with the same level number to reset it
 
-    # COLLISION
+    # COLLISION check
     def check_collision(self, player_position, food_position, time_bonus_position):
         collision_threshold = self.maze.cell_size // 2
 

@@ -16,8 +16,8 @@ import player
 class Game:
     def __init__(self):
         pygame.init()
-        self.display = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT))
-        pygame.display.set_caption("Pou Maze Game")
+        self.display = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT)) # define display(size)
+        pygame.display.set_caption("Pou Maze Game") # window name
         self.clock = pygame.time.Clock()
         self.gameStateManager = GameStateManager("Start")
         
@@ -27,17 +27,15 @@ class Game:
         self.food = pygame.image.load("assets/images/Burger.webp").convert_alpha()
         time_bonus_sprite = pygame.image.load("assets/images/time.png").convert_alpha()
     
-        self.player = player.Player((screenvariable.SCREENWIDTH // 2, screenvariable.SCREENHEIGHT // 2), player_sprite)
+        self.player = player.Player((screenvariable.SCREENWIDTH // 2, screenvariable.SCREENHEIGHT // 2), player_sprite) # blit position and sprite
 
         # font
         self.font = pygame.font.Font("assets/PouFont.ttf", 32)
 
         # music
-        background_music = pygame.mixer.music.load("assets/sounds/background_music.ogg")
+        pygame.mixer.music.load("assets/sounds/background_music.ogg") # background music track
         pygame.mixer.music.play(-1, 0.0) # -1 means the music loops forever and the next varible is where the song starts
-        pygame.mixer.music.set_volume(0.1)
-
-        game_over_sound = pygame.mixer.Sound("assets/sounds/game_over.mp3")
+        pygame.mixer.music.set_volume(0.1) # volume not too loud
         
         # Create views and pass player sprite
         self.start = Start.Start(self.display, self.gameStateManager, self.font, self.player.sprite)
@@ -45,13 +43,14 @@ class Game:
         self.pause = Pause.Pause(self.display, self.gameStateManager, self.font, self.player.sprite)
         self.game_over = End.GameOver(self.display, self.gameStateManager, self.font, self.player.sprite, self.level)
 
+        # define different view states
         self.states = {
             "Start": self.start, 
             "Level": self.level, 
             "Pause": self.pause,
-            "GameOver": self.game_over
-        }
+            "GameOver": self.game_over}
 
+    # run logic
     def run(self):
         running = True
         while running:
@@ -63,7 +62,7 @@ class Game:
             
             # Check if game is over in level
             if self.gameStateManager.get_states() == "Level" and self.level.game_over:
-                pygame.mixer.music.stop()
+                pygame.mixer.music.stop() # stops music if game over
                 self.gameStateManager.set_states("GameOver")
             
             # draw current view
@@ -105,12 +104,16 @@ class Game:
                 pygame.mixer.music.play(-1, 0.0)
                 pygame.mixer.music.set_volume(0.1)
 
+# game state manager
 class GameStateManager:
     def __init__(self, currentState):
         self.currentState = currentState
 
+    # checks what self.states it is
     def get_states(self):
         return self.currentState
+    
+    # draws the state (view)
     def set_states(self, state):
         self.currentState = state
 
