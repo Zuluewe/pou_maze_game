@@ -209,24 +209,25 @@ class Level:
         dt = self.clock.tick(screenvariable.FPS) / 800.0
         self.update(dt)
        
-
+# controller dummy
 if __name__ == "__main__":
-    # Dummy objects for testing
     pygame.init()
     display = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT))
     display.fill("#50b032") # grass green
-    pygame.display.set_caption("Level")
-    font = pygame.font.Font("assets/PouFont.ttf", 32)
+    pygame.display.set_caption("Pou Maze: Level") # dummy
+    font = pygame.font.Font("assets/PouFont.ttf", 32) # dummy
     clock = pygame.time.Clock()
     running = True
     dt = 0
-    gameStateManager = 'Level' # dummy for testing, should be passed from Game class
-    exit = pygame.image.load("assets/images/exit.jpg").convert_alpha()
-    time_bonus_sprite = pygame.image.load("assets/images/time.png").convert_alpha()
-    resized_sprite= pygame.image.load("assets/images/pou_happy.png")  
-    food = pygame.image.load("assets/images/Burger.webp").convert_alpha()
+
+    gameStateManager = 'Level' # dummy
+    exit = pygame.image.load("assets/images/exit.jpg").convert_alpha() # Dummy
+    time_bonus_sprite = pygame.image.load("assets/images/time.png").convert_alpha() # Dummy
+    resized_sprite= pygame.image.load("assets/images/pou_happy.png") # Dummy
+    food = pygame.image.load("assets/images/Burger.webp").convert_alpha() # Dummy
 
     level = Level(display, None, font, resized_sprite, clock, exit, food, 0, 0, 10, time_bonus_sprite) # pass dummy sprite and clock for testing
+
     running = True
     
     while running:

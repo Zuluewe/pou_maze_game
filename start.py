@@ -38,16 +38,16 @@ class Start:
         self.display.blit(welcome_text, (((screenvariable.SCREENWIDTH - welcome_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 250))) # display welcome text
         self.display.blit(start_text, (((screenvariable.SCREENWIDTH - start_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 150))) # display start text
 
-# controller
+# controller dummy
 if __name__ == "__main__":
     pygame.init()
-    gameStateManager = 'Start' # dummy for testing, should be passed from Game class
+    gameStateManager = 'Start' # dummy
     screen = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT ))
-    pygame.display.set_caption("Pou Maze Game: Start")
+    pygame.display.set_caption("Pou Maze Game: Start") # dummy
     clock = pygame.time.Clock()
     running = True
-    font = pygame.font.Font("assets/PouFont.ttf", 32)
-    player_sprite = pygame.image.load("assets/images/pou_happy.png")
+    font = pygame.font.Font("assets/PouFont.ttf", 32) # dummy
+    player_sprite = pygame.image.load("assets/images/pou_happy.png") # dummy
     
     start_view = Start(screen, font, gameStateManager, player_sprite) # dummy font and gameStateManager for testing, should be passed from Game class
     

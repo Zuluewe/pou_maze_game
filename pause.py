@@ -37,15 +37,18 @@ class Pause:
         self.display.blit(pause_text, (((screenvariable.SCREENWIDTH - pause_text_width) // 2, screenvariable.SCREENHEIGHT // 2 ))) # display game over
         self.display.blit(return_text, (((screenvariable.SCREENWIDTH - return_text_width) // 2, screenvariable.SCREENHEIGHT // 2 + 100))) # display death
 
-# controller
+# controller dummy
 if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT))
-    pygame.display.set_caption("Pou Maze Game: Start")
+    pygame.display.set_caption("Pou Maze Game: Pause") # dummy
     clock = pygame.time.Clock()
     running = True
+
+    gameStateManager = 'Pause' # dummy
+    font = pygame.font.Font("assets/PouFont.ttf", 32) # dummy
     
-    game_over_view = Pause(screen, None)
+    game_over_view = Pause(screen, font, gameStateManager, player_sprite = None)
     
     class Model:
         pass

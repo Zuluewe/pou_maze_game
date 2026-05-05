@@ -5,13 +5,19 @@ import screenvariable
 import level
 
 class GameOver:
-    def __init__(self, display, font, gameStateManager, player_sprite = None, level = None):
+    def __init__(self, display, font, gameStateManager, score, player_sprite = None, level = None, ):
         self.display = display
         self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
         self.level = level
+        if self.level != None:
+            self.score = score
+            score = self.level.score
+        else:
+            self.score = 0
 
+    # draw view
     def draw(self, model):
         self.display.fill("#3690df") # dark grass
 
@@ -19,12 +25,12 @@ class GameOver:
         game_over_font = pygame.font.Font("assets/PouFont.ttf", 62)
         font = pygame.font.Font("assets/PouFont.ttf", 32)
 
-        # define
+        # define assets
         background_picture = pygame.image.load("assets/images/forest_1.png").convert_alpha()
         
         game_over_text = game_over_font.render("Game Over", True, "white")
         pou_died_text = font.render("Pou starved to death", True, "red")
-        score_text = font.render(f"Score: {self.level.score}", True, "white")
+        score_text = font.render(f"Score: {self.score}", True, "white")
         restart_game_text = font.render("Press 'r' to restart game", True, "white")
 
         # get size
@@ -43,15 +49,17 @@ class GameOver:
         self.display.blit(score_text, (((screenvariable.SCREENWIDTH - score_text_width) // 2, screenvariable.SCREENHEIGHT // 2 - 25)))
         self.display.blit(restart_game_text, (((screenvariable.SCREENWIDTH - restart_game_text_width) // 2, screenvariable.SCREENHEIGHT // 2 + 75)))
 
-# controller
+# controller dummy
 if __name__ == "__main__":
     pygame.init()
+    gameStateManager = 'GameOver' # dummy
     screen = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT))
-    pygame.display.set_caption("Pou Maze Game: Start")
+    pygame.display.set_caption("Pou Maze Game: Game Over") # dummy
     clock = pygame.time.Clock()
+    font = pygame.font.Font("assets/PouFont.ttf", 32) # dummy
     running = True
     
-    game_over_view = GameOver(screen, None)
+    game_over_view = GameOver(screen, font, gameStateManager, 0, player_sprite = None, level = None)
     
     class Model:
         pass

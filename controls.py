@@ -23,7 +23,7 @@ class Game:
         self.font = pygame.font.Font("assets/PouFont.ttf", 32)
         self.gameStateManager = GameStateManager("Start")
         
-        # Create player
+        # Define spirtes
         player_sprite = pygame.image.load("assets/images/pou_hungry.png").convert_alpha()
         self.exit = pygame.image.load("assets/images/exit.jpg").convert_alpha()
         self.food = pygame.image.load("assets/images/Burger.webp").convert_alpha()
