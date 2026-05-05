@@ -206,7 +206,7 @@ class Level:
         self.display.blit(time_text, (screenvariable.SCREENWIDTH - time_text.get_width() - 10, 10))
 
         pygame.display.flip() # update the display after drawing everything
-        dt = self.clock.tick(screenvariable.FPS) / 800.0
+        dt = self.clock.tick(screenvariable.FPS) / 800.0 # adjust the divisor to control the speed of the timer (lower = faster timer, higher = slower timer)
         self.update(dt)
        
 # controller dummy
