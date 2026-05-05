@@ -5,17 +5,12 @@ import screenvariable
 import level
 
 class GameOver:
-    def __init__(self, display, font, gameStateManager, score, player_sprite = None, level = None, ):
+    def __init__(self, display, font, gameStateManager, player_sprite = None, level = None):
         self.display = display
         self.font = font
         self.gameState = gameStateManager
         self.player_sprite = player_sprite
         self.level = level
-        if self.level != None:
-            self.score = score
-            score = self.level.score
-        else:
-            self.score = 0
 
     # draw view
     def draw(self, model):
@@ -26,6 +21,12 @@ class GameOver:
         font = pygame.font.Font("assets/PouFont.ttf", 32)
 
         # define assets
+        # dummy for score
+        if self.level == None:
+            self.score = 0
+        else:
+            self.score = self.level.score
+
         background_picture = pygame.image.load("assets/images/forest_1.png").convert_alpha()
         
         game_over_text = game_over_font.render("Game Over", True, "white")
@@ -59,7 +60,7 @@ if __name__ == "__main__":
     font = pygame.font.Font("assets/PouFont.ttf", 32) # dummy
     running = True
     
-    game_over_view = GameOver(screen, font, gameStateManager, 0, player_sprite = None, level = None)
+    game_over_view = GameOver(screen, font, gameStateManager, player_sprite = None, level = None)
     
     class Model:
         pass

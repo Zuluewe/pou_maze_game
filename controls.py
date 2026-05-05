@@ -19,8 +19,6 @@ class Game:
         self.display = pygame.display.set_mode((screenvariable.SCREENWIDTH, screenvariable.SCREENHEIGHT))
         pygame.display.set_caption("Pou Maze Game")
         self.clock = pygame.time.Clock()
-
-        self.font = pygame.font.Font("assets/PouFont.ttf", 32)
         self.gameStateManager = GameStateManager("Start")
         
         # Define spirtes
@@ -29,7 +27,6 @@ class Game:
         self.food = pygame.image.load("assets/images/Burger.webp").convert_alpha()
         time_bonus_sprite = pygame.image.load("assets/images/time.png").convert_alpha()
     
-
         self.player = player.Player((screenvariable.SCREENWIDTH // 2, screenvariable.SCREENHEIGHT // 2), player_sprite)
 
         # font
