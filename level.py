@@ -12,7 +12,7 @@ food = pygame.image.load("assets/images/Burger.webp")
 exit = pygame.image.load("assets/images/exit.jpg")
 time_sprite = pygame.image.load("assets/images/time.png")
 
-class Level:
+class LevelModel:
     def __init__(self, display, gameStateManager, font, player_sprite, clock, exit_sprite, food_sprite, current_level, init_score, init_time, time_bonus_sprite):
         self.level = current_level
         self.grid_size, self.cell_size = self.get_level_config(self.level) # get the grid size and cell size for the current level
@@ -51,8 +51,8 @@ class Level:
         # GENERATE THE MAZE
         self.maze = Maze(self.maze_surface, (self.grid_size), (self.cell_size), screenvariable.OFFSET_X, screenvariable.OFFSET_Y,("#3f5837"))
         self.maze.generate(0,0, self.maze_surface) # generate the maze and draw it directly on the maze surface
-        self.move_cooldown = 0.05 #seconds between moves (0,20 = 5 moves/sec)
-        self.move_timer = 0.0
+        self.move_cooldown = 0.08 # (0,05 = 20 moves / sekund)
+        self.move_timer = 0.0 # hold count of the secconds passed so when the cooldown is done the player can move, then it resets to 0
 
         # PLAYER position (r,c)
         self.player_row = 0
@@ -64,8 +64,7 @@ class Level:
         
         # food and timer position
         self.food_position = ((screenvariable.MAZE_START_X + (self.maze.grid_size - 1) * self.maze.cell_size), (screenvariable.MAZE_START_Y + (self.maze.grid_size -1)*self.maze.cell_size))
-        self.time_bonus_position = ((screenvariable.MAZE_START_X + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size)), (screenvariable.MAZE_START_Y + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size)))
-        self.draw()  
+        self.time_bonus_position = ((screenvariable.MAZE_START_X + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size)), (screenvariable.MAZE_START_Y + (random.randint(0, self.maze.grid_size -1) * self.maze.cell_size))) 
     
     # scaling the player sprite size
     def scale_sprite(self, sprite, cell_size, proportion):
@@ -81,6 +80,10 @@ class Level:
 
     # updates the game and player position
     def update(self, dt):
+
+        # Moved COLLISION CHECK in update
+        self.check_collision(self.player_position, self.food_position, self.time_bonus_position)
+
         # Decrease time
         self.time_left -= dt
         if self.time_left <= 0:
@@ -126,7 +129,8 @@ class Level:
                         screenvariable.MAZE_START_Y + new_r * self.maze.cell_size + half - self.player_sprite.get_height() // 2 
                     )
                 self.move_timer = 0.0  # reset timer after move
-
+        
+        
     # function to go the next level
     def next_level(self):
         self.level += 1 # increase the maze size for the next level
@@ -142,7 +146,12 @@ class Level:
         #(r,c) coordinates for the player position
         self.player_row = 0
         self.player_col = 0
-
+        #we resize the sprites        
+        self.time_sprite = self.scale_sprite(self.time_sprite, self.cell_size, 0.6) # rescale time bonus sprite for the new cell size
+        self.food_sprite = self.scale_sprite(self.food_sprite, self.cell_size, 0.8) # rescale food sprite for the new cell size
+        self.exit_sprite = self.scale_sprite(self.exit_sprite, self.cell_size, 1) # rescale exit sprite for the new cell size
+        self.player_sprite = self.scale_sprite(self.player_sprite, self.cell_size, 0.8) # rescale player sprite for the new cell size
+     
         # reset positions
         half = self.maze.cell_size // 2
         self.player_position = (
@@ -158,12 +167,7 @@ class Level:
         else:
             self.time_add = False  # No time bonus this round
             self.time_sprite.set_alpha(0)  # Make the time bonus sprite invisible for this round
-        #we resize the sprites        
-        self.time_sprite = self.scale_sprite(self.time_sprite, self.cell_size, 0.6) # rescale time bonus sprite for the new cell size
-        self.food_sprite = self.scale_sprite(self.food_sprite, self.cell_size, 0.8) # rescale food sprite for the new cell size
-        self.exit_sprite = self.scale_sprite(self.exit_sprite, self.cell_size, 1) # rescale exit sprite for the new cell size
-        self.player_sprite = self.scale_sprite(self.player_sprite, self.cell_size, 0.8) # rescale player sprite for the new cell size
-     
+        
     # called init to reinitialize level when resetting after game over 
     def reset_level(self):
         
@@ -171,7 +175,7 @@ class Level:
 
     # COLLISION check
     def check_collision(self, player_position, food_position, time_bonus_position):
-        collision_threshold = self.maze.cell_size // 2
+        collision_threshold = self.maze.cell_size // 4
 
         # FOOD
         if abs(player_position[0] - food_position[0]) < collision_threshold and abs(player_position[1] - food_position[1]) < collision_threshold:
@@ -191,33 +195,42 @@ class Level:
             else:
                 self.time_left = self.time_left  # No change if already collected
 
-    # DRAW THE STAGE
-    def draw(self, model=None):  
-        self.display.fill("#50b032") # grass green
-        self.display.blit(self.maze_surface, (screenvariable.MAZE_START_X, screenvariable.MAZE_START_Y)) # blit the pre-drawn maze surface onto the main display
-        font = pygame.font.Font("assets/PouFont.ttf", 32)
-        self.maze.redraw_paths() # redraw the maze paths on top of the maze surface, so they are visible above the walls # redraw entrance and exit to make sure they are visible above the paths
-        self.display.blit(self.exit_sprite, (screenvariable.MAZE_START_X - (self.maze.cell_size), screenvariable.MAZE_START_Y )) # draw exit on top of paths to make sure it's visible
-        self.display.blit(self.exit_sprite, (screenvariable.MAZE_START_X + (self.maze.grid_size) * self.maze.cell_size, screenvariable.MAZE_START_Y + (self.maze.grid_size - 1) * self.maze.cell_size)) # draw exit on top of paths to make sure it's visible
-        self.display.blit(self.food_sprite, (self.food_position)) # draw food on top of paths to make sure it's visible
-        self.display.blit(self.time_sprite, (self.time_bonus_position)) # draw time bonus on top of paths to make sure it's visible, random position for testing
+
+class LevelView:
+    def __init__(self, display, font, clock):
+        self.display = display
+        self.font = font
+        self.clock = clock
+
     
-        # Draw player
-        self.display.blit(self.player_sprite, self.player_position)
-        self.check_collision(self.player_position, self.food_position, self.time_bonus_position) # check for collisions with food and time bonus after drawing the player, so it updates the score and time correctly before rendering the text
 
-        # define text
-        score_text = font.render(f"Score: {self.score}", True, "white")
-        time_text = font.render(f"Time: {int(self.time_left)}", True, "white")
+    def draw(self, model):
+        self.display.fill("#50b032")  # grass green
+        
+        # MAZE
+        self.display.blit(model.maze_surface, (screenvariable.MAZE_START_X, screenvariable.MAZE_START_Y))
+        model.maze.redraw_paths()
+        self.display.blit(model.exit_sprite, (screenvariable.MAZE_START_X - model.maze.cell_size, screenvariable.MAZE_START_Y))
+        self.display.blit(model.exit_sprite, (screenvariable.MAZE_START_X + model.maze.grid_size * model.maze.cell_size, screenvariable.MAZE_START_Y + (model.maze.grid_size - 1) * model.maze.cell_size))
+        
+        # PLAYER
+        self.display.blit(model.player_sprite, model.player_position)
 
-        # render text
+        # ASSETS
+        self.display.blit(model.food_sprite, model.food_position)
+        self.display.blit(model.time_sprite, model.time_bonus_position)        
+        
+        # TEXT
+        font = pygame.font.Font("assets/PouFont.ttf", 32)
+        score_text = font.render(f"Score: {model.score}", True, "white")
+        time_text = font.render(f"Time: {int(model.time_left)}", True, "white")
+        
         self.display.blit(score_text, (10, 10))
         self.display.blit(time_text, (screenvariable.SCREENWIDTH - time_text.get_width() - 10, 10))
+        
+        pygame.display.flip()
 
-        pygame.display.flip() # update the display after drawing everything
-        dt = self.clock.tick(screenvariable.FPS) / 800.0 # adjust the divisor to control the speed of the timer (lower = faster timer, higher = slower timer)
-        self.update(dt)
-       
+
 # controller dummy
 if __name__ == "__main__":
     pygame.init()
@@ -235,16 +248,16 @@ if __name__ == "__main__":
     resized_sprite= pygame.image.load("assets/images/pou_happy.png") # Dummy
     food = pygame.image.load("assets/images/Burger.webp").convert_alpha() # Dummy
 
-    level = Level(display, None, font, resized_sprite, clock, exit, food, 0, 0, 10, time_bonus_sprite) # pass dummy sprite and clock for testing
-
+    model = LevelModel(display, None, font, resized_sprite, clock, exit, food, 0, 0, 60, time_bonus_sprite) # pass dummy sprite and clock for testing
+    level = LevelView(display, font, clock) # pass the model to the view for drawing
     running = True
     
     while running:
-        level.draw()
+        dt = clock.tick(screenvariable.FPS) / 1000.0  # delta time in seconds
+        model.update(dt)  # update game state
+        level.draw(model)  # render the updated model
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        
-        clock.tick(screenvariable.FPS)
     pygame.quit()
