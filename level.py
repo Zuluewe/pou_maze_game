@@ -11,6 +11,9 @@ player = pygame.image.load("assets/images/pou_happy.png")
 food = pygame.image.load("assets/images/Burger.webp")
 exit = pygame.image.load("assets/images/exit.jpg")
 time_sprite = pygame.image.load("assets/images/time.png")
+pou_eating = pygame.mixer.Sound("assets/sounds/eat.ogg")
+timer = pygame.mixer.Sound("assets/sounds/timer.ogg")
+game_over_sound = pygame.mixer.Sound("assets/sounds/game_over.mp3")
 
 class LevelModel:
     def __init__(self, display, gameStateManager, font, player_sprite, clock, exit_sprite, food_sprite, current_level, init_score, init_time, time_bonus_sprite):
@@ -27,9 +30,9 @@ class LevelModel:
         self.score = init_score
 
         # define sounds
-        self.pou_eating = pygame.mixer.Sound("assets/sounds/eat.ogg")
-        self.timer = pygame.mixer.Sound("assets/sounds/timer.ogg")
-        self.game_over_sound = pygame.mixer.Sound("assets/sounds/game_over.mp3")
+        self.pou_eating = pou_eating
+        self.timer = timer
+        self.game_over_sound = game_over_sound
 
         # TIMER variables
         self.time_left = init_time
