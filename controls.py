@@ -38,7 +38,7 @@ class Game:
         
         # Create views and pass player sprite
         self.start = Start.Start(self.display, self.gameStateManager, self.font, self.player.sprite)
-        self.levelModel = LevelModel(self.display, self.gameStateManager, self.font, self.player_sprite, self.clock, self.exit, self.food, 0, 0, 10, time_bonus_sprite) # pass player sprite for movement and collision, also pass clock for timing and exit and food sprites for drawing
+        self.levelModel = LevelModel(self.display, self.gameStateManager, self.font, self.player.sprite, self.clock, self.exit, self.food, 0, 0, 10, time_bonus_sprite) # pass player sprite for movement and collision, also pass clock for timing and exit and food sprites for drawing
         self.levelView = LevelView(self.display, self.font, self.clock)
         self.pause = Pause.Pause(self.display, self.gameStateManager, self.font, self.player.sprite)
         self.game_over = End.GameOver(self.display, self.gameStateManager, self.font, self.player.sprite, self.levelModel)
@@ -66,14 +66,14 @@ class Game:
                 self.gameStateManager.set_states("GameOver")
             
             # draw current view
-                current_view = self.states[self.gameStateManager.get_states()]
-                if current_view == self.levelView: # 
-                    dt = self.clock.tick(screenvariable.FPS) / 1000.0 
-                    self.levelModel.update(dt)
-                    self.levelView.draw(self.levelModel) 
+            current_view = self.states[self.gameStateManager.get_states()]
+            if current_view == self.levelView: # 
+                dt = self.clock.tick(screenvariable.FPS) / 1000.0 
+                self.levelModel.update(dt)                    
+                self.levelView.draw(self.levelModel) 
             else:
                 current_view.draw(model = None)
-            
+        
             pygame.display.update()
             self.clock.tick(screenvariable.FPS)
         
