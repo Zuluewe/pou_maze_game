@@ -7,6 +7,7 @@ import screenvariable
 from maze_generator import Maze 
 
 # we load the sprites here to pass them to the level class, so we don't have to load them every time we reset the level, which would cause performance issues. We also convert_alpha() to optimize the images for faster blitting with transparency.
+pygame.init()
 player = pygame.image.load("assets/images/pou_happy.png") 
 food = pygame.image.load("assets/images/Burger.webp")
 exit = pygame.image.load("assets/images/exit.jpg")
