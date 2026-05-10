@@ -7,13 +7,10 @@ Pou maze game er et spil der tager udgangspunkt i det populære virtuel kældeyr
 ## MVC (Model, View, Controller)
 Gennem dette projekt har vi taget udgangspunkt i MVC arkitektur strukten. Dvs at vi således har delt vores filer op på denne måde.
 
-Model kommer til at håndtere spilleren, objekter i spiller og genereationen af labyrinter. Dette kan ses i:
-- <code> models folder </code>
-    - <code> maze_generator.py </code>
-    - <code> player.py </code>
-    - <code> object.py </code>
-        - <code> food.py </code>
-        - <code> timer_bonus.py </code>
+Model kommer til at håndtere spillerens logik, objekter i spiller og genereationen af labyrinter. Dette kan ses i:
+ - <code> maze_generator.py </code>
+ - <code> Level.py </code>
+     - <code> class LevelModel </code>
 
 View kommer til at håndtere hvordan scenerne bliver tegnet samt objekter og spiller. Dette kan ses i:
 - <code> views folder </code>
