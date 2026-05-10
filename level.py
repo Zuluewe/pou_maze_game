@@ -135,7 +135,7 @@ class LevelModel:
                 self.move_timer = 0.0  # reset timer after move
         
         
-    # function to go the next level
+    # function to go the next lvevel
     def next_level(self):
         self.level += 1 # increase the maze size for the next level
         self.grid_size += 2
